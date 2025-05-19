@@ -1,1 +1,13 @@
 /home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/SVCApplication.java
+/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/controler/DocumentControler.java
+/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/controler/UserControler.java
+/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/controler/VersionControler.java
+/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/model/Document.java
+/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/model/DocumentVersion.java
+/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/model/UserClass.java
+/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/repository/DocumentRepository.java
+/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/repository/UserRepository.java
+/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/repository/VersionRepository.java
+/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/service/DocumentService.java
+/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/service/UserService.java
+/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/service/VersionService.java

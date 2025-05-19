@@ -1,17 +1,32 @@
+encje - gotowe ale moze trzeba dodac pola niekiedy
+
+
 DocumentService:
     dostaje plik txt tworzy dokument i wersje zero lub nastepna -done
-    rollbacki - zmiana currentversion - todo
-    pobieranie i nadpisywanie pliku --git pull -force -todo (o ile sie da jak nie tylko pobieranie docsa currentversion)
+    rollbacki - zmiana currentversion - done
+    usuwanie -done
+    pobieranie -done
+    data utworzenia - pole jedynie w wersji bo przy uplodzie tworzy sie wersja 0.0 i tam ma byc data
+    uzupelnic metode uplodu zeby dodawala daty - todo
 
 UserService:
-(na pewno trzeba dodac pola do modelu userclass)
-    logowaie,przegladanie,usuwanie userow, - spring security pewnie jakies sesje itd  
+(na pewno trzeba dodac pola do modelu userclass i metody do repository)
+    logowaie,przegladanie,usuwanie i dodawanie userow, - spring security pewnie jakies sesje itd  
                                              zeby tylko zalogowany mogl robic rzeczy - todo
-    statystyki ile ma dokumnetow, kiedy zalogowany ostatnio , kiedy zalozyl konto idt - todo
+    statystyki ile ma dokumnetow,jakie ma dokumenty, kiedy zalogowany ostatnio , kiedy zalozyl konto idt - todo
     
 VersionService:
-    roznice w wersjach, inne dane, staty itd - todo
-    jakies drzewko wersji z wskazaniem na biezaca - todo
+     wszystkie wersje - done
+     roznice w werjach - done
+     numerowanie linijek - done
+     wyswitl content - done
 
-Do tego wszystkiego zrobic controllery api z odpowiednimi parametrami- todo
-to samo z repository dodac potrzebne metody 
+DocumentController - done
+VersionController -done
+User Controller -todo
+
+
+baza danych do ogarniecia najpierw h2
+render na koniec jak bedzie dzialalo albo co innego i zmiana na postgre np
+
+Wszystko przetestowac bo nie wiem czy tu cokolwiek dziala i naprawic bledy a na pewno sa

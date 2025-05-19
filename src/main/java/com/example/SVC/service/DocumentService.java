@@ -104,5 +104,11 @@ public class DocumentService {
         return content.getBytes(StandardCharsets.UTF_8);
     }
 
+    public String getDocumentTitle(Long documentId) {
+        Document document = documentRepository.findById(documentId)
+            .orElseThrow(() -> new IllegalArgumentException("Document not found"));
+        return document.getTitle();
+}
+
 
 }
