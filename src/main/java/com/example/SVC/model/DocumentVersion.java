@@ -20,7 +20,7 @@ public class DocumentVersion {
     @Column(nullable = false)
     private Double version;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="document",nullable = false)
     private Document document;
 

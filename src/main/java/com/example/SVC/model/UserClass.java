@@ -25,8 +25,9 @@ public class UserClass {
 
     private String password;
 
+    @ToString.Exclude
     @OneToMany
-    private List<DocumentVersion> documents;
+    private List<Document> documents;
 
 
 

@@ -34,8 +34,8 @@ public class Document {
     @JoinColumn(name="currentversion",nullable = false)
     private DocumentVersion currentVersion;
 
-    @OneToMany
-    @JoinColumn(name="versionlist")
+    @ToString.Exclude
+    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
     private List<DocumentVersion> versions;
 
 
