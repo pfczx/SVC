@@ -1,6 +1,8 @@
 package com.example.SVC.controller;
 
 import com.example.SVC.service.DocumentService;
+
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,7 +17,7 @@ public class DocumentController {
 
     private final DocumentService documentService;
 
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadFile(
         @RequestParam("file") MultipartFile file,
         @RequestParam("title") String title,
@@ -25,7 +27,7 @@ public class DocumentController {
             documentService.handleFileUpload(file, title, userId);
             return ResponseEntity.ok("File uploaded successfully.");
         } catch (Exception e) {
-            return ResponseEntity.status(999).body("something went wrong");
+            return ResponseEntity.status(999).body("Something went wrong "+e.getMessage());
         }
     }
 
@@ -56,7 +58,7 @@ public class DocumentController {
             documentService.rollbackDocument(documentId, versionNumber);
             return ResponseEntity.ok("Rollback successful.");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(999).body("something went wrong");
+            return ResponseEntity.status(999).body("something went wrong "+e.getMessage());
         }
     }
 
@@ -66,7 +68,7 @@ public class DocumentController {
             documentService.deleteDocument(documentId);
             return ResponseEntity.ok("Document deleted.");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(999).body("something went wrong");
+            return ResponseEntity.status(999).body("something went wrong  "+e.getMessage());
         }
     }
 }

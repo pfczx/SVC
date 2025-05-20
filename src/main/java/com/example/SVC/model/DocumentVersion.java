@@ -1,5 +1,7 @@
 package com.example.SVC.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.*;
@@ -21,7 +23,8 @@ public class DocumentVersion {
     private Double version;
 
     @ManyToOne
-    @JoinColumn(name="document",nullable = false)
+    @JoinColumn(name="document")
+    @JsonBackReference
     private Document document;
 
     @Lob

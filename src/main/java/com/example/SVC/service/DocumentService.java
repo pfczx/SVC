@@ -38,7 +38,7 @@ public class DocumentService {
         Document document = documentRepository.findByTitle(title)
                 .orElse(null);
 
-        double newVersionNumber=0.0;
+        double newVersionNumber;
 
         if (document == null) {
             document = new Document();
@@ -46,9 +46,11 @@ public class DocumentService {
             document.setFileName(fileName);
             document.setCreatedBy(user);
             document.setVersions(new ArrayList<>());
+            newVersionNumber = 0.0;
             documentRepository.save(document);
         } else {
-            newVersionNumber = documentRepository.findNewestVersion(title) + 0.1;
+            Double latestVersion = documentRepository.findNewestVersion(title);
+            newVersionNumber = latestVersion + 0.1;
         }
 
         DocumentVersion version = new DocumentVersion();
@@ -62,7 +64,8 @@ public class DocumentService {
         document.getVersions().add(version);
 
         documentRepository.save(document);
-    }
+}
+
 
     public void deleteDocument(Long documentId) {
         Document document = documentRepository.findById(documentId)

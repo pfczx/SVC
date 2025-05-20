@@ -2,6 +2,8 @@ package com.example.SVC.service;
 
 import com.example.SVC.model.DocumentVersion;
 import com.example.SVC.repository.VersionRepository;
+import com.example.SVC.repository.DocumentRepository;
+import com.example.SVC.model.Document;
 
 import com.github.difflib.DiffUtils;
 import com.github.difflib.patch.Patch;
@@ -16,7 +18,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class VersionService {
-    private final VersionRepository versionRepository;
+    private final VersionRepository versionRepository;     
+    private final DocumentRepository documentRepository;      
 
 
     public List<DocumentVersion> getAllVersionsByDocumentId(Long documentId) {
@@ -70,10 +73,19 @@ public class VersionService {
         return diffResult.toString();
     }
 
-    public String displayContent(Long versionId) {
-        DocumentVersion version = versionRepository.findById(versionId)
+    public String displayContent(Long documentId,Double versionnum) {
+        Document document = documentRepository.findById(documentId)
+                .orElseThrow(() -> new IllegalArgumentException("Document not found"));
+        DocumentVersion version = versionRepository.findByVersionAndDocument(versionnum, document)
                 .orElseThrow(() -> new IllegalArgumentException("Version not found"));
         return version.getContent();
+            
+    }
+    public String getCurrentVersion(Long documentId) {
+        Document document = documentRepository.findById(documentId)
+                .orElseThrow(() -> new IllegalArgumentException("Document not found"));
+        DocumentVersion currentVersion = document.getCurrentVersion();
+        return currentVersion.getContent();
     }
 
   

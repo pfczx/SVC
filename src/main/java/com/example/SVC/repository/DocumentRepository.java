@@ -14,4 +14,5 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     
     @Query("SELECT MAX(dv.version) FROM DocumentVersion dv WHERE dv.document.title = :title")
     Double findNewestVersion(@Param("title") String title);
+    
 }

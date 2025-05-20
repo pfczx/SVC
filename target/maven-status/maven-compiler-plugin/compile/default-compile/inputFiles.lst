@@ -1,7 +1,7 @@
 /home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/SVCApplication.java
-/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/controler/DocumentControler.java
-/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/controler/UserControler.java
-/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/controler/VersionControler.java
+/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/controller/DocumentController.java
+/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/controller/UserController.java
+/home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/controller/VersionController.java
 /home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/model/Document.java
 /home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/model/DocumentVersion.java
 /home/devpad/javaprojects/SVC/src/main/java/com/example/SVC/model/UserClass.java

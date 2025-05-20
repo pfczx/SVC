@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 @Table(name="documents")
@@ -31,11 +33,12 @@ public class Document {
     private UserClass createdBy;
 
     @OneToOne
-    @JoinColumn(name="currentversion",nullable = false)
+    @JoinColumn(name="currentversion")
     private DocumentVersion currentVersion;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<DocumentVersion> versions;
 
 

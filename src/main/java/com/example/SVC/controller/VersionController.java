@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/versions")
@@ -29,9 +32,15 @@ public class VersionController {
         return ResponseEntity.ok(diff);
     }
 
-    @GetMapping("/{versionId}/content")
-    public ResponseEntity<String> getVersionContent(@PathVariable Long versionId) {
-        String content = versionService.displayContent(versionId);
+    @GetMapping("/{documentId}/{version}/content")
+    public ResponseEntity<String> getVersionContent(@PathVariable Long documentId,@PathVariable Double version) {
+        String content = versionService.displayContent(documentId,version);
         return ResponseEntity.ok(content);
     }
+    @GetMapping("/currentversion/{documentId}")
+    public ResponseEntity<String> getCurrentVersion(@PathVariable Long documentId) {
+        String currentVersion = versionService.getCurrentVersion(documentId);
+        return ResponseEntity.ok(currentVersion);
+    }
+    
 }

@@ -23,10 +23,18 @@ VersionService:
 
 DocumentController - done
 VersionController -done
-User Controller -todo
+User Controller -todo (tylko podstawowe user do zmiany pewnie)
 
 
 baza danych do ogarniecia najpierw h2
 render na koniec jak bedzie dzialalo albo co innego i zmiana na postgre np
 
 Wszystko przetestowac bo nie wiem czy tu cokolwiek dziala i naprawic bledy a na pewno sa
+
+
+///Update
+metody te ktore sa dzialaja dobrze
+mozna dodac jakies metody na np ostatnio utworzony dokumnet uzytkownika itd, urozmaicic i dodac funcjonalnosci
+ogarniecie uzytkownikow i ich sesji itd (jesli w ogole uda sie to ogarnac jakkolwiek)
+ogarniecie bazy danych - wszystko dziala w pamieci na razie
+hostowanie serwisu i bazy np render ale moze jest cos lepszego

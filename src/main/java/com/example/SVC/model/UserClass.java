@@ -26,7 +26,7 @@ public class UserClass {
     private String password;
 
     @ToString.Exclude
-    @OneToMany
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
     private List<Document> documents;
 
 
