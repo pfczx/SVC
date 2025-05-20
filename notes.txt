@@ -34,6 +34,8 @@ Wszystko przetestowac bo nie wiem czy tu cokolwiek dziala i naprawic bledy a na 
 
 ///Update
 metody te ktore sa dzialaja dobrze
+metoda z diff do zmiany tak zeby uwzgfledniala ten sam dokument nie sam numer wersji (jest inna podobna do
+                                                                                             wyswietlania juz z tym)
 mozna dodac jakies metody na np ostatnio utworzony dokumnet uzytkownika itd, urozmaicic i dodac funcjonalnosci
 ogarniecie uzytkownikow i ich sesji itd (jesli w ogole uda sie to ogarnac jakkolwiek)
 ogarniecie bazy danych - wszystko dziala w pamieci na razie
