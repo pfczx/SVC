@@ -33,6 +33,8 @@ Wszystko przetestowac bo nie wiem czy tu cokolwiek dziala i naprawic bledy a na 
 
 
 ///Update
+zamienic controllery zeby mialy trycatche wszedzie jak w doc controller
+ogsarnac wersjonowanie (duble 0.3)
 metody te ktore sa dzialaja dobrze
 metoda z diff do zmiany tak zeby uwzgfledniala ten sam dokument nie sam numer wersji (jest inna podobna do
                                                                                              wyswietlania juz z tym)
