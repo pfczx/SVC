@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 
 
 
@@ -82,17 +81,20 @@ public class DocumentService {
         DocumentVersion versionToRollback = versionRepository.findByVersionAndDocument(versionNumber, document)
                 .orElseThrow(() -> new IllegalArgumentException("Version not found"));
 
-        document.setCurrentVersion(versionToRollback);
+
+        DocumentVersion rollbackedVersion = new DocumentVersion();
+        rollbackedVersion.setContent(versionToRollback.getContent());
+        Double newVersionNumber = versionRepository.findNewestVersion(documentId) + 0.1;
+        rollbackedVersion.setVersion(newVersionNumber);
+        rollbackedVersion.setDocument(document);
+        versionRepository.save(rollbackedVersion);
+
+    
+
+        document.setCurrentVersion(rollbackedVersion);
+        document.getVersions().add(rollbackedVersion);
         documentRepository.save(document);
 
-        List<DocumentVersion> versions = document.getVersions();
-        for (DocumentVersion version : versions) {
-            if (version.getVersion() > versionNumber) {
-                versionRepository.delete(version);
-            }
-        }
-        document.setVersions(new ArrayList<>(versions));
-        documentRepository.save(document);
 
         
     }
