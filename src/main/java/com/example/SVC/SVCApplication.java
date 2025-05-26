@@ -7,8 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SVCApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(SVCApplication.class, args);
-    }
+    public static void main(String[] args) {SpringApplication.run(SVCApplication.class, args); }
 
 }

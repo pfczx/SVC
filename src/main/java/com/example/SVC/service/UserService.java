@@ -17,9 +17,19 @@ public class UserService {
         UserClass user = new UserClass();
         user.setName(username);
         user.setPassword(password);
-        userRepository.save(user);
+        if(!userRepository.existsByName(username))
+            userRepository.save(user);
+        else
+            throw new IllegalArgumentException("Username already exists");
     }
 
-    
+    public void deleteUser(String username, String password) {
+        UserClass user = userRepository.findByName(username);
+
+        if(user != null && user.getPassword().equals(password))
+            userRepository.delete(user);
+        else
+            throw new IllegalArgumentException("Username does not exist");
+    }
 
 }
