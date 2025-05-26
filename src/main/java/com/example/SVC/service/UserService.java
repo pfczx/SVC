@@ -7,6 +7,8 @@ import com.example.SVC.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import com.example.SVC.model.UserClass;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -32,4 +34,9 @@ public class UserService {
             throw new IllegalArgumentException("Username does not exist");
     }
 
+    public List<UserClass> getUsers() {
+        return userRepository.findAll();
+    }
+
+    
 }

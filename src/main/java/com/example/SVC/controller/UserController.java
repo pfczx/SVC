@@ -1,12 +1,12 @@
 package com.example.SVC.controller;
 
+import com.example.SVC.model.UserClass;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import com.example.SVC.service.UserService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -27,10 +27,15 @@ public class UserController {
     public ResponseEntity<String> deleteUser(String username, String password) {
         try {
             userService.deleteUser(username, password);
-            return ResponseEntity.ok("User created successfully.");
+            return ResponseEntity.ok("User deleted successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(999).body("something went wrong");
         }
     }
+    @GetMapping("/showAll")
+    public List<UserClass> showAllUsers() {
+        return userService.getUsers();
+    }
+
 	
 }
