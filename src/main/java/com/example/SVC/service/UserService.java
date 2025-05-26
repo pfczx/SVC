@@ -38,5 +38,13 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    
+    public void editUser(String username, String oldpassword, String newpassword) {
+        UserClass user = userRepository.findByName(username);
+        if (user != null && user.getPassword().equals(oldpassword)) {
+            user.setPassword(newpassword);
+        }
+        else
+            throw new IllegalArgumentException("Something went wrong");
+
+    }
 }

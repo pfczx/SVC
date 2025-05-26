@@ -36,6 +36,14 @@ public class UserController {
     public List<UserClass> showAllUsers() {
         return userService.getUsers();
     }
-
+    @PatchMapping("/edit")
+    public ResponseEntity<String> editUser(String username, String oldpassword, String newpassword) {
+        try {
+            userService.editUser(username, oldpassword, newpassword);
+            return ResponseEntity.ok("User edited successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(999).body("something went wrong");
+        }
+    }
 	
 }
