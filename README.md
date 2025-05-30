@@ -3,7 +3,7 @@ Spring-Version-Control
 
 
 #TODO
-> user login
-> user methods (show user documents)
-> GUI
-> hosting
+>  - user login
+>  - user methods (show user documents)
+>  - GUI
+>  - hosting
