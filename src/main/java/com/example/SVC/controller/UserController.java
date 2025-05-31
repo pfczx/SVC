@@ -2,6 +2,8 @@ package com.example.SVC.controller;
 
 import com.example.SVC.model.UserClass;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import com.example.SVC.service.UserService;
@@ -43,6 +45,19 @@ public class UserController {
             return ResponseEntity.ok("User edited successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(999).body("something went wrong");
+        }
+    }
+    @Controller
+    @RequiredArgsConstructor
+    public class UserViewController {
+
+        private final UserService userService;
+
+        @GetMapping("/showAll")
+        public String showAllUsers(Model model) {
+            List<UserClass> users = userService.getUsers();
+            model.addAttribute("users", users);
+            return "showAll"; // Thymeleaf szuka pliku showAll.html w templates
         }
     }
 	
