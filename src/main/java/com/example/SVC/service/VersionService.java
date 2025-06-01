@@ -10,6 +10,7 @@ import com.github.difflib.patch.Patch;
 import com.github.difflib.patch.AbstractDelta;
 import com.github.difflib.patch.DeltaType;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -73,7 +74,7 @@ public class VersionService {
         return diffResult.toString();
     }
 
-    public String displayContent(Long documentId,Double versionnum) {
+    public String displayContent(Long documentId, BigDecimal versionnum) {
         Document document = documentRepository.findById(documentId)
                 .orElseThrow(() -> new IllegalArgumentException("Document not found"));
         DocumentVersion version = versionRepository.findByVersionAndDocument(versionnum, document)

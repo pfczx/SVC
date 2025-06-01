@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -37,7 +38,7 @@ public class DocumentService {
         Document document = documentRepository.findByTitle(title)
                 .orElse(null);
 
-        double newVersionNumber;
+        BigDecimal newVersionNumber;
 
         if (document == null) {
             document = new Document();
@@ -45,11 +46,11 @@ public class DocumentService {
             document.setFileName(fileName);
             document.setCreatedBy(user);
             document.setVersions(new ArrayList<>());
-            newVersionNumber = 0.0;
+            newVersionNumber = new BigDecimal(0);
             documentRepository.save(document);
         } else {
-            Double latestVersion = documentRepository.findNewestVersion(title);
-            newVersionNumber = latestVersion + 0.1;
+            BigDecimal latestVersion = documentRepository.findNewestVersion(title);
+            newVersionNumber = latestVersion.add(new BigDecimal("0.1"));
         }
 
         DocumentVersion version = new DocumentVersion();
@@ -74,7 +75,7 @@ public class DocumentService {
         documentRepository.delete(document);
     }
 
-    public void rollbackDocument(Long documentId, double versionNumber) {
+    public void rollbackDocument(Long documentId, BigDecimal versionNumber) {
         Document document = documentRepository.findById(documentId)
                 .orElseThrow(() -> new IllegalArgumentException("Document not found"));
 
@@ -84,7 +85,7 @@ public class DocumentService {
 
         DocumentVersion rollbackedVersion = new DocumentVersion();
         rollbackedVersion.setContent(versionToRollback.getContent());
-        Double newVersionNumber = versionRepository.findNewestVersion(documentId) + 0.1;
+        BigDecimal newVersionNumber = versionRepository.findNewestVersion(documentId).add(new BigDecimal("0.1"));
         rollbackedVersion.setVersion(newVersionNumber);
         rollbackedVersion.setDocument(document);
         versionRepository.save(rollbackedVersion);

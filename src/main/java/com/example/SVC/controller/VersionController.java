@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,7 +34,7 @@ public class VersionController {
     }
 
     @GetMapping("/{documentId}/{version}/content")
-    public ResponseEntity<String> getVersionContent(@PathVariable Long documentId,@PathVariable Double version) {
+    public ResponseEntity<String> getVersionContent(@PathVariable Long documentId,@PathVariable BigDecimal version) {
         String content = versionService.displayContent(documentId,version);
         return ResponseEntity.ok(content);
     }

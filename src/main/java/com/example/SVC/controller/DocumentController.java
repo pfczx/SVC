@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -52,7 +53,7 @@ public class DocumentController {
     @PostMapping("/{id}/rollback")
     public ResponseEntity<String> rollbackDocument(
             @PathVariable("id") Long documentId,
-            @RequestParam("version") double versionNumber) {
+            @RequestParam("version") BigDecimal versionNumber) {
 
         try {
             documentService.rollbackDocument(documentId, versionNumber);

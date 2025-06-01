@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name="versions")
 @Getter
@@ -20,7 +22,7 @@ public class DocumentVersion {
     private long id;
 
     @Column(nullable = false)
-    private Double version;
+    private BigDecimal version;
 
     @ManyToOne
     @JoinColumn(name="document")
