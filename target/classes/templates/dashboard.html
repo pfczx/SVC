@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f9f9f9;
+        }
+        .dashboard-container {
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 30px;
+        }
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+        .btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            text-decoration: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 6px;
+            width: 200px;
+            text-align: center;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+    <h1>Welcome to the Dashboard</h1>
+    <h1>THIS IS NEW</h1>
+
+    <div class="btn-group">
+        <a href="/upload" class="btn">Upload File</a>
+        <a href="/compare" class="btn">Compare Files</a>
+        <a href="/files" class="btn">Browse Files</a>
+    </div>
+</div>
+</body>
+</html>
