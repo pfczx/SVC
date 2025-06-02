@@ -5,8 +5,7 @@ import org.springframework.stereotype.Service;
 import com.example.SVC.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
-import com.example.SVC.model.UserClass;
-
+import com.example.SVC.model.User;
 import java.util.List;
 
 @Service
@@ -16,7 +15,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public void createUser(String username, String password) {
-        UserClass user = new UserClass();
+        User user = new User();
         user.setName(username);
         user.setPassword(password);
         if(!userRepository.existsByName(username))
@@ -26,7 +25,7 @@ public class UserService {
     }
 
     public void deleteUser(String username, String password) {
-        UserClass user = userRepository.findByName(username);
+        User user = userRepository.findByName(username);
 
         if(user != null && user.getPassword().equals(password))
             userRepository.delete(user);
@@ -34,12 +33,12 @@ public class UserService {
             throw new IllegalArgumentException("Username does not exist");
     }
 
-    public List<UserClass> getUsers() {
+    public List<User> getUsers() {
         return userRepository.findAll();
     }
 
     public void editUser(String username, String oldpassword, String newpassword) {
-        UserClass user = userRepository.findByName(username);
+        User user = userRepository.findByName(username);
         if (user != null && user.getPassword().equals(oldpassword)) {
             user.setPassword(newpassword);
         }

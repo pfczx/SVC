@@ -5,7 +5,7 @@ C:\java\SVC\src\main\java\com\example\SVC\controller\UserController.java
 C:\java\SVC\src\main\java\com\example\SVC\controller\VersionController.java
 C:\java\SVC\src\main\java\com\example\SVC\model\Document.java
 C:\java\SVC\src\main\java\com\example\SVC\model\DocumentVersion.java
-C:\java\SVC\src\main\java\com\example\SVC\model\UserClass.java
+C:\java\SVC\src\main\java\com\example\SVC\model\User.java
 C:\java\SVC\src\main\java\com\example\SVC\repository\DocumentRepository.java
 C:\java\SVC\src\main\java\com\example\SVC\repository\UserRepository.java
 C:\java\SVC\src\main\java\com\example\SVC\repository\VersionRepository.java

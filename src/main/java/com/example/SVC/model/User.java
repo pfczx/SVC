@@ -9,26 +9,34 @@ import java.util.List;
 @Entity
 @Table(name="users")
 @ToString
-@Getter
-@Setter
+
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserClass {
+public class User {
 
+    @Setter
+    @Getter
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
+    @Getter
     private String name;
 
+    @Setter
+    @Getter
+    @Column(unique = true, nullable = false)
     private String login;
 
+    @Setter
+    @Getter
+    @Column(nullable = false)
     private String password;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
     private List<Document> documents;
-
 
 
 

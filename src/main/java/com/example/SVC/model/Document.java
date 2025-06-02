@@ -30,7 +30,7 @@ public class Document {
     @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "createdby",nullable = false)
-    private UserClass createdBy;
+    private User createdBy;
 
     @OneToOne
     @JoinColumn(name="currentversion")

@@ -2,7 +2,7 @@ package com.example.SVC.service;
 
 import com.example.SVC.model.Document;
 import com.example.SVC.model.DocumentVersion;
-import com.example.SVC.model.UserClass;
+import com.example.SVC.model.User;
 import com.example.SVC.repository.DocumentRepository;
 import com.example.SVC.repository.UserRepository;
 import com.example.SVC.repository.VersionRepository;
@@ -32,7 +32,7 @@ public class DocumentService {
         String content = new String(file.getBytes(), StandardCharsets.UTF_8);
         String fileName = file.getOriginalFilename();
 
-        UserClass user = userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Document document = documentRepository.findByTitle(title)
