@@ -38,51 +38,51 @@ public class AppUserService implements UserDetailsService {
         }
     }
 
-    public void createUser(String username, String password) {
-        AppUser user = new AppUser();
-        user.setName(username);
-        user.setPassword(password);
-        if(!appUserRepository.existsByName(username))
-            appUserRepository.save(user);
-        else
-            throw new IllegalArgumentException("Username already exists");
-    }
-
-    public void deleteUser(String username, String password) {
-        Optional<AppUser> userOptional = appUserRepository.findByName(username);
-
-        if (userOptional.isPresent()) {
-            AppUser user = userOptional.get();
-            if (user.getPassword().equals(password)) {
-                appUserRepository.delete(user);
-            } else {
-                throw new IllegalArgumentException("Incorrect password");
-            }
-        } else {
-            throw new IllegalArgumentException("Username does not exist");
-        }
-    }
-
-
-    public List<AppUser> getUsers() {
-        return appUserRepository.findAll();
-    }
-
-    public void editUser(String username, String oldPassword, String newPassword) {
-        Optional<AppUser> userOptional = appUserRepository.findByName(username);
-
-        if (userOptional.isPresent()) {
-            AppUser user = userOptional.get();
-            if (user.getPassword().equals(oldPassword)) {
-                user.setPassword(newPassword);
-                appUserRepository.save(user);
-            } else {
-                throw new IllegalArgumentException("Incorrect current password");
-            }
-        } else {
-            throw new IllegalArgumentException("User not found");
-        }
-    }
+//    public void createUser(String username, String password) {
+//        AppUser user = new AppUser();
+//        user.setName(username);
+//        user.setPassword(password);
+//        if(!appUserRepository.existsByName(username))
+//            appUserRepository.save(user);
+//        else
+//            throw new IllegalArgumentException("Username already exists");
+//    }
+//
+//    public void deleteUser(String username, String password) {
+//        Optional<AppUser> userOptional = appUserRepository.findByName(username);
+//
+//        if (userOptional.isPresent()) {
+//            AppUser user = userOptional.get();
+//            if (user.getPassword().equals(password)) {
+//                appUserRepository.delete(user);
+//            } else {
+//                throw new IllegalArgumentException("Incorrect password");
+//            }
+//        } else {
+//            throw new IllegalArgumentException("Username does not exist");
+//        }
+//    }
+//
+//
+//    public List<AppUser> getUsers() {
+//        return appUserRepository.findAll();
+//    }
+//
+//    public void editUser(String username, String oldPassword, String newPassword) {
+//        Optional<AppUser> userOptional = appUserRepository.findByName(username);
+//
+//        if (userOptional.isPresent()) {
+//            AppUser user = userOptional.get();
+//            if (user.getPassword().equals(oldPassword)) {
+//                user.setPassword(newPassword);
+//                appUserRepository.save(user);
+//            } else {
+//                throw new IllegalArgumentException("Incorrect current password");
+//            }
+//        } else {
+//            throw new IllegalArgumentException("User not found");
+//        }
+//    }
 
 
 }

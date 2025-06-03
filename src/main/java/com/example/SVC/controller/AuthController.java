@@ -6,9 +6,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class AuthController {
 
-    @GetMapping("/login")
+    @GetMapping("/req/login")
     public String showLoginPage() {
         return "login";
+    }
+
+    @GetMapping("/req/register")
+    public String showRegisterPage() {
+        return "register";
     }
 
     @GetMapping("/dashboard")
@@ -18,7 +23,7 @@ public class AuthController {
 
     @GetMapping("/")
     public String home() {
-        return "redirect:/login";
+        return "redirect:/req/login";
     }
 
     @GetMapping("/upload")

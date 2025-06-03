@@ -11,8 +11,8 @@ import java.util.List;
 @ToString
 @Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 public class AppUser {
 
     @Id
