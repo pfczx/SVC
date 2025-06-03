@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 
 @Configuration
 @AllArgsConstructor
-@EnableWebSecurity
+//@EnableWebSecurity
 public class SecurityConfig {
 
     @Autowired
@@ -45,22 +45,34 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
-        return httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(httpForm ->{
-                    httpForm.loginPage("/req/login").permitAll();
-                    httpForm.defaultSuccessUrl("/dashboard");
-
-                })
-
-
-                .authorizeHttpRequests(registry ->{
-                    registry.requestMatchers("/req/register","/css/**","/js/**").permitAll();
-                    registry.anyRequest().authenticated();
-                })
-                .build();
-    }
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+//        return httpSecurity
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .formLogin(httpForm ->{
+//                    httpForm.loginPage("/req/login").permitAll();
+//                    httpForm.defaultSuccessUrl("/dashboard");
+//
+//                })
+//
+//
+//                .authorizeHttpRequests(registry ->{
+//                    registry.requestMatchers("/req/register","/css/**","/js/**").permitAll();
+//                    registry.anyRequest().authenticated();
+//                })
+//                .build();
+//    }
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    return httpSecurity
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(registry -> {
+                registry.anyRequest().permitAll(); // Allow ALL requests
+            })
+            .formLogin(AbstractHttpConfigurer::disable) // Explicitly disable form login
+            .logout(AbstractHttpConfigurer::disable) // Disable logout
+            .httpBasic(AbstractHttpConfigurer::disable) // Disable basic auth
+            .build();
+}
 
 }

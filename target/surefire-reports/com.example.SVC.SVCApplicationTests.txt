@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.example.SVC.SVCApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.836 s -- in com.example.SVC.SVCApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.064 s -- in com.example.SVC.SVCApplicationTests

@@ -23,7 +23,7 @@ public class AuthController {
 
     @GetMapping("/")
     public String home() {
-        return "redirect:/req/login";
+        return "/dashboard";
     }
 
     @GetMapping("/upload")
