@@ -2,9 +2,9 @@ package com.example.SVC.service;
 
 import com.example.SVC.model.Document;
 import com.example.SVC.model.DocumentVersion;
-import com.example.SVC.model.User;
+import com.example.SVC.model.AppUser;
 import com.example.SVC.repository.DocumentRepository;
-import com.example.SVC.repository.UserRepository;
+import com.example.SVC.repository.AppUserRepository;
 import com.example.SVC.repository.VersionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class DocumentService {
 
     private final DocumentRepository documentRepository;
     private final VersionRepository versionRepository;
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
 
     public void handleFileUpload(MultipartFile file, String title, Long userId) throws IOException {
         if (!file.getOriginalFilename().endsWith(".txt")) {
@@ -32,7 +32,7 @@ public class DocumentService {
         String content = new String(file.getBytes(), StandardCharsets.UTF_8);
         String fileName = file.getOriginalFilename();
 
-        User user = userRepository.findById(userId)
+        AppUser appUser = appUserRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Document document = documentRepository.findByTitle(title)
@@ -44,7 +44,7 @@ public class DocumentService {
             document = new Document();
             document.setTitle(title);
             document.setFileName(fileName);
-            document.setCreatedBy(user);
+            document.setCreatedBy(appUser);
             document.setVersions(new ArrayList<>());
             newVersionNumber = new BigDecimal(0);
             documentRepository.save(document);

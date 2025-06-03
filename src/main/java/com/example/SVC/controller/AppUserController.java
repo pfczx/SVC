@@ -1,39 +1,37 @@
 package com.example.SVC.controller;
 
-import com.example.SVC.model.User;
+import com.example.SVC.model.AppUser;
+import com.example.SVC.repository.AppUserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.SVC.service.UserService;
+import com.example.SVC.service.AppUserService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserController {
+public class AppUserController {
 
-    private final UserService userService;
+    private final AppUserService appUserService;
 
-    // Konstruktor dla Dependency Injection
-    public UserController(UserService userService) {
-        this.userService = userService;
+    @Autowired
+    private AppUserRepository userRepository;
+
+    public AppUserController(AppUserService appUserService) {
+        this.appUserService = appUserService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<String> createUser(@RequestParam String username,
-                                             @RequestParam String password) {
-        try {
-            userService.createUser(username, password);
-            return ResponseEntity.ok("User created successfully.");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Something went wrong: " + e.getMessage());
-        }
+    @PostMapping(value = "/register", consumes = "application/json")
+    public AppUser registerUser(@RequestBody AppUser appUser) {
+        return userRepository.save(appUser);
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteUser(@RequestParam String username,
                                              @RequestParam String password) {
         try {
-            userService.deleteUser(username, password);
+            appUserService.deleteUser(username, password);
             return ResponseEntity.ok("User deleted successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Something went wrong: " + e.getMessage());
@@ -41,8 +39,8 @@ public class UserController {
     }
 
     @GetMapping("/showAll")
-    public List<User> showAllUsers() {
-        return userService.getUsers();
+    public List<AppUser> showAllUsers() {
+        return appUserService.getUsers();
     }
 
     @PatchMapping("/edit")
@@ -50,7 +48,7 @@ public class UserController {
                                            @RequestParam String oldpassword,
                                            @RequestParam String newpassword) {
         try {
-            userService.editUser(username, oldpassword, newpassword);
+            appUserService.editUser(username, oldpassword, newpassword);
             return ResponseEntity.ok("User edited successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Something went wrong: " + e.getMessage());

@@ -18,11 +18,11 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="user : ${users}">
-      <td th:text="${user.id}"></td>
-      <td th:text="${user.name}"></td>
-      <td th:text="${user.login}"></td>
-      <td th:text="${user.password}"></td>
+    <tr th:each="appUser : ${users}">
+      <td th:text="${appUser.id}"></td>
+      <td th:text="${appUser.name}"></td>
+      <td th:text="${appUser.login}"></td>
+      <td th:text="${appUser.password}"></td>
     </tr>
     </tbody>
   </table>

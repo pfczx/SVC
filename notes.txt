@@ -23,7 +23,7 @@ VersionService:
 
 DocumentController - done
 VersionController -done
-User Controller -todo (tylko podstawowe user do zmiany pewnie)
+AppUser Controller -todo (tylko podstawowe appUser do zmiany pewnie)
 
 
 baza danych do ogarniecia najpierw h2

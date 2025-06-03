@@ -9,28 +9,19 @@ import java.util.List;
 @Entity
 @Table(name="users")
 @ToString
-
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class AppUser {
 
-    @Setter
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
-    @Getter
+    @Column(unique = true, nullable = false)
     private String name;
 
-    @Setter
-    @Getter
-    @Column(unique = true, nullable = false)
-    private String login;
-
-    @Setter
-    @Getter
     @Column(nullable = false)
     private String password;
 
