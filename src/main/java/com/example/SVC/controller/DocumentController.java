@@ -1,8 +1,10 @@
 package com.example.SVC.controller;
 
+import com.example.SVC.model.Document;
 import com.example.SVC.service.DocumentService;
 
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -18,6 +21,7 @@ public class DocumentController {
 
     private final DocumentService documentService;
 
+    @Transactional
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadFile(
         @RequestParam("file") MultipartFile file,
@@ -30,6 +34,12 @@ public class DocumentController {
         } catch (Exception e) {
             return ResponseEntity.status(999).body("Something went wrong "+e.getMessage());
         }
+    }
+
+    @GetMapping("/files")
+    public ResponseEntity<List<Document>> getAllDocuments() {
+        List<Document> documents = documentService.getAllDocuments();
+        return ResponseEntity.ok(documents);
     }
 
     @GetMapping("/download/{id}")

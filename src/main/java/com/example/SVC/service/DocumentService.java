@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-
+import java.util.List;
 
 
 @Service
@@ -73,6 +73,10 @@ public class DocumentService {
 
         versionRepository.deleteAll(document.getVersions());
         documentRepository.delete(document);
+    }
+
+    public List<Document> getAllDocuments() {
+        return documentRepository.findAll();
     }
 
     public void rollbackDocument(Long documentId, BigDecimal versionNumber) {

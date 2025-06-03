@@ -63,7 +63,7 @@
 
         if (password === confirmPassword) {
             const jsonData = JSON.stringify(data);
-            fetch('/api/users/register', {
+            fetch('/req/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
