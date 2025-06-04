@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +48,7 @@ public class DocumentService {
             document.setCreatedBy(appUser);
             document.setVersions(new ArrayList<>());
             newVersionNumber = new BigDecimal(0);
+            document.setCreatedAt(LocalDateTime.now());
             documentRepository.save(document);
         } else {
             BigDecimal latestVersion = documentRepository.findNewestVersion(title);
