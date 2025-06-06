@@ -26,7 +26,7 @@ public class DocumentVersion {
     private BigDecimal version;
 
     @Column(nullable = false)
-    private LocalDateTime date;
+    private LocalDateTime date = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name="document")
