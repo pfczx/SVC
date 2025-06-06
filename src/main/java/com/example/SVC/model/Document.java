@@ -1,5 +1,6 @@
 package com.example.SVC.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,6 +32,7 @@ public class Document {
     @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "createdby",nullable = false)
+    @JsonBackReference
     private UserClass createdBy;
 
     @Column(nullable = false)
