@@ -21,8 +21,6 @@ public class UserClass {
 
     private String name;
 
-    private String login;
-
     private String password;
 
     @ToString.Exclude

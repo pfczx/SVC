@@ -6,6 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="1010f658-525d-4cfd-a62b-d312068a8ce6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/model/Document.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/model/Document.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/model/DocumentVersion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/model/DocumentVersion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/model/UserClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/model/UserClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/repository/DocumentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/repository/DocumentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/service/DocumentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/service/DocumentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/service/VersionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/service/VersionService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +110,7 @@
       <workItem from="1748703813836" duration="1646000" />
       <workItem from="1748706162456" duration="320000" />
       <workItem from="1748791099911" duration="305000" />
-      <workItem from="1749228974061" duration="434000" />
+      <workItem from="1749228974061" duration="2504000" />
     </task>
     <servers />
   </component>

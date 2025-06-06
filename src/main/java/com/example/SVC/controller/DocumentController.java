@@ -1,8 +1,10 @@
 package com.example.SVC.controller;
 
+import com.example.SVC.model.Document;
 import com.example.SVC.service.DocumentService;
 
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -18,11 +21,12 @@ public class DocumentController {
 
     private final DocumentService documentService;
 
+    @Transactional
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadFile(
-        @RequestParam("file") MultipartFile file,
-        @RequestParam("title") String title,
-        @RequestParam("userId") Long userId) {
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("title") String title,
+            @RequestParam("userId") Long userId) {
 
         try {
             documentService.handleFileUpload(file, title, userId);
@@ -32,12 +36,18 @@ public class DocumentController {
         }
     }
 
+    @GetMapping("/files")
+    public ResponseEntity<List<Document>> getAllDocuments() {
+        List<Document> documents = documentService.getAllDocuments();
+        return ResponseEntity.ok(documents);
+    }
+
     @GetMapping("/download/{id}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Long documentId) {
         try {
             byte[] content = documentService.downoladDocument(documentId);
             String title = documentService.getDocumentTitle(documentId);
-        
+
             String fileName = title + ".txt";
 
             return ResponseEntity.ok()
@@ -48,7 +58,7 @@ public class DocumentController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }
-}
+    }
 
     @PostMapping("/{id}/rollback")
     public ResponseEntity<String> rollbackDocument(

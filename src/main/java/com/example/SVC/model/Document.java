@@ -3,6 +3,7 @@ package com.example.SVC.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -31,6 +32,9 @@ public class Document {
     @ManyToOne
     @JoinColumn(name = "createdby",nullable = false)
     private UserClass createdBy;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 
     @OneToOne
     @JoinColumn(name="currentversion")

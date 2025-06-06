@@ -12,8 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-
+import java.util.List;
 
 
 @Service
@@ -22,7 +23,7 @@ public class DocumentService {
 
     private final DocumentRepository documentRepository;
     private final VersionRepository versionRepository;
-    private final UserRepository userRepository;
+    private final UserRepository appUserRepository;
 
     public void handleFileUpload(MultipartFile file, String title, Long userId) throws IOException {
         if (!file.getOriginalFilename().endsWith(".txt")) {
@@ -32,7 +33,7 @@ public class DocumentService {
         String content = new String(file.getBytes(), StandardCharsets.UTF_8);
         String fileName = file.getOriginalFilename();
 
-        UserClass user = userRepository.findById(userId)
+        UserClass appUser = appUserRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Document document = documentRepository.findByTitle(title)
@@ -44,9 +45,10 @@ public class DocumentService {
             document = new Document();
             document.setTitle(title);
             document.setFileName(fileName);
-            document.setCreatedBy(user);
+            document.setCreatedBy(appUser);
             document.setVersions(new ArrayList<>());
             newVersionNumber = new BigDecimal(0);
+            document.setCreatedAt(LocalDateTime.now());
             documentRepository.save(document);
         } else {
             BigDecimal latestVersion = documentRepository.findNewestVersion(title);
@@ -64,7 +66,7 @@ public class DocumentService {
         document.getVersions().add(version);
 
         documentRepository.save(document);
-}
+    }
 
 
     public void deleteDocument(Long documentId) {
@@ -73,6 +75,10 @@ public class DocumentService {
 
         versionRepository.deleteAll(document.getVersions());
         documentRepository.delete(document);
+    }
+
+    public List<Document> getAllDocuments() {
+        return documentRepository.findAll();
     }
 
     public void rollbackDocument(Long documentId, BigDecimal versionNumber) {
@@ -90,14 +96,14 @@ public class DocumentService {
         rollbackedVersion.setDocument(document);
         versionRepository.save(rollbackedVersion);
 
-    
+
 
         document.setCurrentVersion(rollbackedVersion);
         document.getVersions().add(rollbackedVersion);
         documentRepository.save(document);
 
 
-        
+
     }
 
     public byte[] downoladDocument(Long documentId) {
@@ -112,9 +118,9 @@ public class DocumentService {
 
     public String getDocumentTitle(Long documentId) {
         Document document = documentRepository.findById(documentId)
-            .orElseThrow(() -> new IllegalArgumentException("Document not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Document not found"));
         return document.getTitle();
-}
+    }
 
 
 }

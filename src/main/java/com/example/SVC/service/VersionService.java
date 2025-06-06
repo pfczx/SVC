@@ -19,8 +19,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class VersionService {
-    private final VersionRepository versionRepository;     
-    private final DocumentRepository documentRepository;      
+    private final VersionRepository versionRepository;
+    private final DocumentRepository documentRepository;
 
 
     public List<DocumentVersion> getAllVersionsByDocumentId(Long documentId) {
@@ -80,7 +80,7 @@ public class VersionService {
         DocumentVersion version = versionRepository.findByVersionAndDocument(versionnum, document)
                 .orElseThrow(() -> new IllegalArgumentException("Version not found"));
         return version.getContent();
-            
+
     }
     public String getCurrentVersion(Long documentId) {
         Document document = documentRepository.findById(documentId)
@@ -89,5 +89,5 @@ public class VersionService {
         return currentVersion.getContent();
     }
 
-  
+
 }

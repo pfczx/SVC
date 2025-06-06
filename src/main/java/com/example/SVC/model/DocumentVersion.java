@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="versions")
@@ -23,6 +24,9 @@ public class DocumentVersion {
 
     @Column(nullable = false)
     private BigDecimal version;
+
+    @Column(nullable = false)
+    private LocalDateTime date;
 
     @ManyToOne
     @JoinColumn(name="document")
