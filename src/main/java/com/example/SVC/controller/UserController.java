@@ -38,6 +38,7 @@ public class UserController {
     public List<UserClass> showAllUsers() {
         return userService.getUsers();
     }
+
     @PatchMapping("/edit")
     public ResponseEntity<String> editUser(String username, String oldpassword, String newpassword) {
         try {
@@ -47,18 +48,4 @@ public class UserController {
             return ResponseEntity.status(999).body("something went wrong");
         }
     }
-    @Controller
-    @RequiredArgsConstructor
-    public class UserViewController {
-
-        private final UserService userService;
-
-        @GetMapping("/showAll")
-        public String showAllUsers(Model model) {
-            List<UserClass> users = userService.getUsers();
-            model.addAttribute("users", users);
-            return "showAll"; // Thymeleaf szuka pliku showAll.html w templates
-        }
-    }
-	
 }

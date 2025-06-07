@@ -6,8 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="1010f658-525d-4cfd-a62b-d312068a8ce6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/model/Document.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/model/Document.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/model/UserClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/model/UserClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SVC/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SVC/templates/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SVC/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SVC/templates/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SVC/templates/showAll.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/showAll.html" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,8 +26,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="HTML File" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -106,6 +115,7 @@
       <workItem from="1748791099911" duration="305000" />
       <workItem from="1749228974061" duration="2504000" />
       <workItem from="1749232434712" duration="1618000" />
+      <workItem from="1749319434555" duration="3455000" />
     </task>
     <servers />
   </component>
