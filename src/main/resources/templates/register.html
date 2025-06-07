@@ -4,23 +4,13 @@
     <meta charset="UTF-8">
     <title>Register AppUser</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
-        .container {
-            max-width: 400px; margin: 100px auto; background: white;
-            padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h2 { text-align: center; margin-bottom: 20px; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        .container { max-width: 400px; margin: 100px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; }
-        input[type="text"], input[type="password"], input[type="email"] {
-            width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;
-        }
-        button {
-            width: 100%; padding: 10px; background-color: #007bff;
-            color: white; border: none; border-radius: 4px; cursor: pointer;
-        }
-        .message { margin-top: 20px; font-weight: bold; color: green; }
-        .error { color: red; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        .error { color: red; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -40,7 +30,10 @@
             <label for="passwordcon">Confirm Password:</label>
             <input type="password" id="passwordcon" name="passwordcon" required placeholder="Confirm Password">
         </div>
-        <button type="button" id="submit">Create Account</button>
+        <button type="button" id="submit">Create account</button>
+        <button type="button" onclick="window.location.href='/login'" style="margin-top: 10px; background-color: #007bff; border: none; color: white; padding: 10px 15px; border-radius: 4px; cursor: pointer;">
+            Login
+        </button>
     </form>
 
     <div th:if="${param.success}" class="message">AppUser created successfully!</div>
@@ -62,7 +55,7 @@
         fetch('/api/users/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: username, password: password }) // `name` bo UserClass ma `name`, a nie `username`
+            body: JSON.stringify({ name: username, password: password }) //
         })
             .then(response => {
                 if (response.ok) {
