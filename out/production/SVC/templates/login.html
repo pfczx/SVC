@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
@@ -18,7 +18,7 @@
     <h2>Login</h2>
 
     <form th:action="@{/login}" method="post">
-<!--        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />-->
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
         <div class="form-group">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
@@ -29,9 +29,9 @@
         </div>
         <button type="submit">Login</button>
 
-<!--        <div th:if="${param.error}" class="error">-->
-<!--            Invalid username or password-->
-<!--        </div>-->
+        <div th:if="${param.error}" class="error">
+            Invalid username or password
+        </div>
     </form>
 
 </div>

@@ -40,7 +40,7 @@
 </head>
 <body>
 <div class="dashboard-container">
-    <h1>Welcome to the Dashboard</h1>
+    <h1>Welcome, <span th:text="${username}">User</span>!</h1>
     <div class="btn-group">
         <a href="/upload" class="btn">Upload File</a>
         <a href="/compare" class="btn">Compare Files</a>

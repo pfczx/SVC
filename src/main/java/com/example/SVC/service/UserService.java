@@ -21,7 +21,7 @@ public class UserService {
         if (!userRepository.existsByName(username)) {
             UserClass user = new UserClass();
             user.setName(username);
-            user.setPassword(passwordEncoder.encode(password));  // kodowanie hasła
+            user.setPassword(passwordEncoder.encode(password));
             userRepository.save(user);
         } else {
             throw new IllegalArgumentException("Username already exists");

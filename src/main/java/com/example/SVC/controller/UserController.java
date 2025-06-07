@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import com.example.SVC.service.UserService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -17,12 +18,24 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<String> createUser(String username, String password) {
+    public ResponseEntity<String> createUser(@RequestParam String username, @RequestParam String password) {
         try {
             userService.createUser(username, password);
             return ResponseEntity.ok("User created successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(999).body("something went wrong");
+        }
+    }
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody Map<String, String> body) {
+        String username = body.get("name");
+        String password = body.get("password");
+
+        try {
+            userService.createUser(username, password);
+            return ResponseEntity.ok("User created");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Registration failed: " + e.getMessage());
         }
     }
     @DeleteMapping("/delete")
