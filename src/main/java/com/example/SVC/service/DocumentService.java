@@ -6,24 +6,32 @@ import com.example.SVC.model.UserClass;
 import com.example.SVC.repository.DocumentRepository;
 import com.example.SVC.repository.UserRepository;
 import com.example.SVC.repository.VersionRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
-@RequiredArgsConstructor
 public class DocumentService {
 
     private final DocumentRepository documentRepository;
     private final VersionRepository versionRepository;
     private final UserRepository appUserRepository;
+
+    public DocumentService(DocumentRepository documentRepository, VersionRepository versionRepository, UserRepository appUserRepository) {
+        this.documentRepository = documentRepository;
+        this.versionRepository = versionRepository;
+        this.appUserRepository = appUserRepository;
+    }
 
     public void handleFileUpload(MultipartFile file, String title, Long userId) throws IOException {
         if (!file.getOriginalFilename().endsWith(".txt")) {
@@ -122,5 +130,30 @@ public class DocumentService {
         return document.getTitle();
     }
 
+    @Transactional(readOnly = true)
+    public Map<String, Object> getStatistics(String username) {
+
+        long documentCount = documentRepository.countDocumentsByCreatedBy(username);
+
+        Long totalCharsLong = documentRepository.sumContentLengthsByCreatedBy(username);
+
+        int totalChars = (totalCharsLong != null) ? totalCharsLong.intValue() : 0;
+
+        double averageChars = documentCount > 0 ? (double) totalChars / documentCount : 0;
+
+        long versionCount = documentRepository.countVersionsByCreatedBy(username);
+
+        LocalDate oldest = documentRepository.findOldestDate(username);
+        LocalDate newest = documentRepository.findNewestDate(username);
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("documentCount", documentCount);
+        stats.put("averageCharacters", String.format("%.2f", averageChars));
+        stats.put("versionCount", versionCount);
+        stats.put("oldestDate", oldest != null ? oldest.toString() : "N/A");
+        stats.put("newestDate", newest != null ? newest.toString() : "N/A");
+
+        return stats;
+    }
 
 }
