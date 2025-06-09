@@ -1,0 +1,400 @@
+Index: src/main/java/com/example/SVC/controller/AuthController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.SVC.controller;\r\n\r\nimport com.example.SVC.model.Document;\r\nimport com.example.SVC.model.UserClass;\r\nimport com.example.SVC.repository.UserRepository;\r\nimport com.example.SVC.service.DocumentService;\r\nimport org.springframework.security.core.Authentication;\r\nimport org.springframework.security.crypto.password.PasswordEncoder;\r\nimport org.springframework.stereotype.Controller;\r\nimport org.springframework.ui.Model;\r\nimport org.springframework.web.bind.annotation.GetMapping;\r\nimport org.springframework.web.bind.annotation.ModelAttribute;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\n\r\nimport java.security.Principal;\r\nimport java.util.List;\r\nimport java.util.Map;\r\n\r\n@Controller\r\npublic class AuthController {\r\n\r\n    private final UserRepository userRepository;\r\n    private final PasswordEncoder passwordEncoder;\r\n    private final DocumentService documentService;\r\n\r\n    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, DocumentService documentService) {\r\n        this.userRepository = userRepository;\r\n        this.passwordEncoder = passwordEncoder;\r\n        this.documentService = documentService;\r\n    }\r\n\r\n    @GetMapping(\"/login\")\r\n    public String showLoginPage() {\r\n        return \"login\";\r\n    }\r\n\r\n    @GetMapping(\"/register\")\r\n    public String registerForm(Model model) {\r\n        model.addAttribute(\"user\", new UserClass());\r\n        return \"register\";\r\n    }\r\n\r\n    @PostMapping(\"/register\")\r\n    public String processRegistration(@ModelAttribute UserClass user) {\r\n        user.setPassword(passwordEncoder.encode(user.getPassword()));\r\n        userRepository.save(user);\r\n        return \"redirect:/login\";\r\n    }\r\n\r\n    @GetMapping(\"/dashboard\")\r\n    public String dashboard(Model model, Authentication auth) {\r\n        model.addAttribute(\"username\", auth.getName());\r\n        return \"dashboard\";\r\n    }\r\n\r\n    @GetMapping(\"/\")\r\n    public String home() {\r\n        return \"dashboard\";\r\n    }\r\n\r\n    @GetMapping(\"/upload\")\r\n    public String uploadPage() {\r\n        return \"upload\";\r\n    }\r\n\r\n    @GetMapping(\"/browse\")\r\n    public String browsePage(Model model, Principal principal) {\r\n        if (principal != null) {\r\n            String username = principal.getName();\r\n            List<Document> documents = documentService.getDocumentsBy(username);\r\n            model.addAttribute(\"documents\", documents);\r\n        }\r\n        return \"browse\";\r\n    }\r\n\r\n    @GetMapping(\"/stats\")\r\n    public String statsPage(Model model, Principal principal) {\r\n        if (principal != null) {\r\n            String username = principal.getName();\r\n            Map<String, Object> stats = documentService.getStatistics(username);\r\n            model.addAttribute(\"stats\", stats);\r\n        }\r\n        return \"stats\";\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/SVC/controller/AuthController.java b/src/main/java/com/example/SVC/controller/AuthController.java
+--- a/src/main/java/com/example/SVC/controller/AuthController.java	(revision 2941f9be4aefc6ffee3567847a23c694e3fe5337)
++++ b/src/main/java/com/example/SVC/controller/AuthController.java	(date 1749503448290)
+@@ -11,6 +11,7 @@
+ import org.springframework.web.bind.annotation.GetMapping;
+ import org.springframework.web.bind.annotation.ModelAttribute;
+ import org.springframework.web.bind.annotation.PostMapping;
++import org.springframework.web.bind.annotation.RequestParam;
+ 
+ import java.security.Principal;
+ import java.util.List;
+@@ -64,15 +65,24 @@
+     }
+ 
+     @GetMapping("/browse")
+-    public String browsePage(Model model, Principal principal) {
++    public String browsePage(
++            @RequestParam(defaultValue = "id") String sortBy,
++            @RequestParam(defaultValue = "asc") String direction,
++            Model model,
++            Principal principal) {
++
+         if (principal != null) {
+             String username = principal.getName();
+-            List<Document> documents = documentService.getDocumentsBy(username);
++            List<Document> documents = documentService.getDocumentsBy(username, sortBy, direction);
+             model.addAttribute("documents", documents);
++            model.addAttribute("sortBy", sortBy);
++            model.addAttribute("direction", direction);
+         }
+         return "browse";
+     }
+ 
++
++
+     @GetMapping("/stats")
+     public String statsPage(Model model, Principal principal) {
+         if (principal != null) {
+Index: src/main/java/com/example/SVC/repository/DocumentRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.SVC.repository;\r\n\r\nimport com.example.SVC.model.Document;\r\n\r\nimport java.math.BigDecimal;\r\nimport java.time.LocalDate;\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\nimport com.example.SVC.model.UserClass;\r\nimport org.springframework.data.jpa.repository.JpaRepository;\r\nimport org.springframework.data.jpa.repository.Query;\r\nimport org.springframework.data.repository.query.Param;\r\n\r\n\r\npublic interface DocumentRepository extends JpaRepository<Document, Long> {\r\n    Optional<Document> findByTitle(String title);\r\n    @Query(\"SELECT d.title FROM Document d\")\r\n    List<String> findAllTitles();\r\n\r\n    @Query(\"SELECT MAX(dv.version) FROM DocumentVersion dv WHERE dv.document.title = :title\")\r\n    BigDecimal findNewestVersion(@Param(\"title\") String title);\r\n\r\n    @Query(\"SELECT COUNT(d) FROM Document d WHERE d.createdBy.name = :username\")\r\n    long countDocumentsByCreatedBy(@Param(\"username\") String username);\r\n\r\n    @Query(\"SELECT SUM(LENGTH(dv.content)) FROM Document d JOIN d.versions dv WHERE d.createdBy.name = :username\")\r\n    Long sumContentLengthsByCreatedBy(@Param(\"username\") String username);\r\n\r\n    @Query(\"SELECT AVG(LENGTH(dv.content)) FROM Document d JOIN d.versions dv WHERE d.createdBy.name = :username\")\r\n    Double avgContentLengthsByCreatedBy(@Param(\"username\") String username);\r\n\r\n    @Query(\"SELECT COUNT(dv) FROM Document d JOIN d.versions dv WHERE d.createdBy.name = :username\")\r\n    long countVersionsByCreatedBy(@Param(\"username\") String username);\r\n\r\n    @Query(\"SELECT MIN(d.createdAt) FROM Document d WHERE d.createdBy.name = :username\")\r\n    LocalDate findOldestDate(String username);\r\n\r\n    @Query(\"SELECT MAX(d.createdAt) FROM Document d WHERE d.createdBy.name= :username\")\r\n    LocalDate findNewestDate(String username);\r\n\r\n    @Query(\"SELECT d FROM Document d WHERE d.createdBy.name = :username\")\r\n    List<Document> findAllByCreatedByUsername(@Param(\"username\") String username);\r\n\r\n\r\n\r\n\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/SVC/repository/DocumentRepository.java b/src/main/java/com/example/SVC/repository/DocumentRepository.java
+--- a/src/main/java/com/example/SVC/repository/DocumentRepository.java	(revision 2941f9be4aefc6ffee3567847a23c694e3fe5337)
++++ b/src/main/java/com/example/SVC/repository/DocumentRepository.java	(date 1749503448292)
+@@ -11,7 +11,7 @@
+ import org.springframework.data.jpa.repository.JpaRepository;
+ import org.springframework.data.jpa.repository.Query;
+ import org.springframework.data.repository.query.Param;
+-
++import org.springframework.data.domain.Sort;
+ 
+ public interface DocumentRepository extends JpaRepository<Document, Long> {
+     Optional<Document> findByTitle(String title);
+@@ -42,7 +42,7 @@
+     @Query("SELECT d FROM Document d WHERE d.createdBy.name = :username")
+     List<Document> findAllByCreatedByUsername(@Param("username") String username);
+ 
+-
++    List<Document> findByCreatedBy_Name(String name, Sort sort);
+ 
+ 
+ 
+Index: target/classes/templates/browse.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html xmlns:th=\"http://www.thymeleaf.org\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <title>Lista dokumentów</title>\r\n    <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css\" rel=\"stylesheet\" />\r\n    <style>\r\n        body {\r\n            display: flex;\r\n            margin: 0;\r\n            height: 100vh;\r\n            font-family: Arial, sans-serif;\r\n        }\r\n\r\n        .sidebar {\r\n            width: 250px;\r\n            background-color: #343a40;\r\n            color: white;\r\n            display: flex;\r\n            flex-direction: column;\r\n            padding: 20px;\r\n        }\r\n\r\n        .sidebar a {\r\n            color: white;\r\n            text-decoration: none;\r\n            margin: 10px 0;\r\n            padding: 10px;\r\n            background-color: #495057;\r\n            border-radius: 5px;\r\n            text-align: center;\r\n        }\r\n\r\n        .sidebar a:hover {\r\n            background-color: #6c757d;\r\n        }\r\n\r\n        .content {\r\n            flex-grow: 1;\r\n            padding: 30px;\r\n            background-color: #f8f9fa;\r\n        }\r\n\r\n        table {\r\n            width: 100%;\r\n            border-collapse: collapse;\r\n            margin-top: 20px;\r\n        }\r\n\r\n        th, td {\r\n            padding: 10px;\r\n            border: 1px solid #ccc;\r\n            text-align: left;\r\n        }\r\n\r\n        th {\r\n            background-color: #f0f0f0;\r\n        }\r\n    </style>\r\n</head>\r\n<body>\r\n\r\n<div class=\"sidebar\">\r\n    <a th:href=\"@{/dashboard}\">Dashboard</a>\r\n    <a th:href=\"@{/upload}\">Upload</a>\r\n    <a th:href=\"@{/browse}\">Browse</a>\r\n    <a th:href=\"@{/compare}\">Compare</a>\r\n    <a th:href=\"@{/stats}\">Stats</a>\r\n</div>\r\n\r\n<div class=\"content\">\r\n    <h1>Wszystkie dokumenty</h1>\r\n\r\n    <table border=\"1\">\r\n        <thead>\r\n        <tr>\r\n            <th>ID</th>\r\n            <th>Tytuł</th>\r\n            <th>Nazwa pliku</th>\r\n            <th>Data utworzenia</th>\r\n            <th>Aktualna wersja</th>\r\n        </tr>\r\n        </thead>\r\n        <tbody>\r\n        <tr th:each=\"document : ${documents}\">\r\n            <td th:text=\"${document.id}\"></td>\r\n            <td th:text=\"${document.title}\"></td>\r\n            <td th:text=\"${document.fileName}\"></td>\r\n            <td th:text=\"${#temporals.format(document.createdAt, 'yyyy-MM-dd HH:mm')}\"></td>\r\n            <td th:text=\"${document.currentVersion.version}\"></td>\r\n        </tr>\r\n        </tbody>\r\n    </table>\r\n</div>\r\n\r\n</body>\r\n</html>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/target/classes/templates/browse.html b/target/classes/templates/browse.html
+--- a/target/classes/templates/browse.html	(revision 2941f9be4aefc6ffee3567847a23c694e3fe5337)
++++ b/target/classes/templates/browse.html	(date 1749503448297)
+@@ -55,6 +55,19 @@
+ 
+         th {
+             background-color: #f0f0f0;
++            cursor: pointer;
++        }
++
++        th a {
++            color: inherit;
++            text-decoration: none;
++            display: flex;
++            align-items: center;
++            gap: 5px;
++        }
++
++        th a:hover {
++            text-decoration: underline;
+         }
+     </style>
+ </head>
+@@ -74,11 +87,36 @@
+     <table border="1">
+         <thead>
+         <tr>
+-            <th>ID</th>
+-            <th>Tytuł</th>
+-            <th>Nazwa pliku</th>
+-            <th>Data utworzenia</th>
+-            <th>Aktualna wersja</th>
++            <th>
++                <a th:href="@{/browse(sortBy='id', direction=${sortBy == 'id' and direction == 'asc' ? 'desc' : 'asc'})}">
++                    ID
++                    <span th:text="${sortBy == 'id' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
++                </a>
++            </th>
++            <th>
++                <a th:href="@{/browse(sortBy='title', direction=${sortBy == 'title' and direction == 'asc' ? 'desc' : 'asc'})}">
++                    Tytuł
++                    <span th:text="${sortBy == 'title' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
++                </a>
++            </th>
++            <th>
++                <a th:href="@{/browse(sortBy='fileName', direction=${sortBy == 'fileName' and direction == 'asc' ? 'desc' : 'asc'})}">
++                    Nazwa pliku
++                    <span th:text="${sortBy == 'fileName' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
++                </a>
++            </th>
++            <th>
++                <a th:href="@{/browse(sortBy='createdAt', direction=${sortBy == 'createdAt' and direction == 'asc' ? 'desc' : 'asc'})}">
++                    Data utworzenia
++                    <span th:text="${sortBy == 'createdAt' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
++                </a>
++            </th>
++            <th>
++                <a th:href="@{/browse(sortBy='currentVersion.version', direction=${sortBy == 'currentVersion.version' and direction == 'asc' ? 'desc' : 'asc'})}">
++                    Aktualna wersja
++                    <span th:text="${sortBy == 'currentVersion.version' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
++                </a>
++            </th>
+         </tr>
+         </thead>
+         <tbody>
+@@ -87,7 +125,7 @@
+             <td th:text="${document.title}"></td>
+             <td th:text="${document.fileName}"></td>
+             <td th:text="${#temporals.format(document.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+-            <td th:text="${document.currentVersion.version}"></td>
++            <td th:text="${document.currentVersion != null ? document.currentVersion.version : '-'}"></td>
+         </tr>
+         </tbody>
+     </table>
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"1010f658-525d-4cfd-a62b-d312068a8ce6\" name=\"Changes\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/out/production/SVC/templates/compare.html\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/out/production/SVC/templates/compare.html\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/SVC/controller/AuthController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/SVC/controller/AuthController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/SVC/repository/DocumentRepository.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/SVC/repository/DocumentRepository.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/SVC/repository/VersionRepository.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/SVC/repository/VersionRepository.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/SVC/service/VersionService.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/SVC/service/VersionService.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/resources/templates/compare.html\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/resources/templates/compare.html\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/tekstydotestow/file.txt\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/tekstydotestow/file.txt\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"HTML File\" />\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"main\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 0\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2xEHdeqcqq61jWFZx3g1pRjyuIo\" />\r\n  <component name=\"ProjectLevelVcsManager\">\r\n    <ConfirmationsSetting value=\"1\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"DefaultHtmlFileTemplate\": \"HTML File\",\r\n    \"ModuleVcsDetector.initialDetectionPerformed\": \"true\",\r\n    \"Notification.DisplayName-DoNotAsk-Database detector\": \"Database detector\",\r\n    \"Notification.DoNotAsk-Database detector\": \"true\",\r\n    \"RequestMappingsPanelOrder0\": \"0\",\r\n    \"RequestMappingsPanelOrder1\": \"1\",\r\n    \"RequestMappingsPanelWidth0\": \"75\",\r\n    \"RequestMappingsPanelWidth1\": \"75\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.git.unshallow\": \"true\",\r\n    \"Spring Boot.SVCApplication.executor\": \"Run\",\r\n    \"git-widget-placeholder\": \"main\",\r\n    \"ignore.virus.scanning.warn.message\": \"true\",\r\n    \"junie.onboarding.icon.badge.shown\": \"true\",\r\n    \"kotlin-language-version-configured\": \"true\",\r\n    \"last_opened_file_path\": \"C:/Users/mikol/Desktop/java/spring6/spring6\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"project.structure.last.edited\": \"Project\",\r\n    \"project.structure.proportion\": \"0.15\",\r\n    \"project.structure.side.proportion\": \"0.2\",\r\n    \"settings.editor.selected.configurable\": \"project.propVCSSupport.Mappings\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"SVCApplication\" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\" nameIsGenerated=\"true\">\r\n      <option name=\"ALTERNATIVE_JRE_PATH\" value=\"$USER_HOME$/.jdks/ms-21.0.7\" />\r\n      <option name=\"ALTERNATIVE_JRE_PATH_ENABLED\" value=\"true\" />\r\n      <module name=\"SVC\" />\r\n      <option name=\"SPRING_BOOT_MAIN_CLASS\" value=\"com.example.SVC.SVCApplication\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"1010f658-525d-4cfd-a62b-d312068a8ce6\" name=\"Changes\" comment=\"\" />\r\n      <created>1747496402140</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1747496402140</updated>\r\n      <workItem from=\"1747496403622\" duration=\"170000\" />\r\n      <workItem from=\"1747496668262\" duration=\"5925000\" />\r\n      <workItem from=\"1748244515637\" duration=\"192000\" />\r\n      <workItem from=\"1748244714338\" duration=\"81000\" />\r\n      <workItem from=\"1748244795783\" duration=\"41000\" />\r\n      <workItem from=\"1748244845709\" duration=\"868000\" />\r\n      <workItem from=\"1748245720077\" duration=\"4258000\" />\r\n      <workItem from=\"1748255285990\" duration=\"4162000\" />\r\n      <workItem from=\"1748697913350\" duration=\"1624000\" />\r\n      <workItem from=\"1748699545249\" duration=\"3022000\" />\r\n      <workItem from=\"1748703533923\" duration=\"273000\" />\r\n      <workItem from=\"1748703813836\" duration=\"1646000\" />\r\n      <workItem from=\"1748706162456\" duration=\"320000\" />\r\n      <workItem from=\"1748791099911\" duration=\"305000\" />\r\n      <workItem from=\"1749228974061\" duration=\"2504000\" />\r\n      <workItem from=\"1749232434712\" duration=\"1618000\" />\r\n      <workItem from=\"1749319434555\" duration=\"8858000\" />\r\n      <workItem from=\"1749329341599\" duration=\"754000\" />\r\n      <workItem from=\"1749330101535\" duration=\"4554000\" />\r\n      <workItem from=\"1749491545338\" duration=\"30000\" />\r\n      <workItem from=\"1749491582001\" duration=\"11035000\" />\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"com.intellij.coverage.CoverageDataManagerImpl\">\r\n    <SUITE FILE_PATH=\"coverage/SVC$SVCApplication.ic\" NAME=\"SVCApplication Coverage Results\" MODIFIED=\"1748245529101\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"idea\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"true\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 2941f9be4aefc6ffee3567847a23c694e3fe5337)
++++ b/.idea/workspace.xml	(date 1749503665366)
+@@ -6,14 +6,13 @@
+   <component name="ChangeListManager">
+     <list default="true" id="1010f658-525d-4cfd-a62b-d312068a8ce6" name="Changes" comment="">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/out/production/SVC/templates/compare.html" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SVC/templates/compare.html" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/AuthController.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentViewController.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/repository/DocumentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/repository/DocumentRepository.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/repository/VersionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/repository/VersionRepository.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/service/VersionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/service/VersionService.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/compare.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/compare.html" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/tekstydotestow/file.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tekstydotestow/file.txt" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/service/DocumentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/service/DocumentService.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/browse.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/browse.html" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/target/classes/templates/browse.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/browse.html" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -60,7 +59,7 @@
+     "RunOnceActivity.ShowReadmeOnStart": "true",
+     "RunOnceActivity.git.unshallow": "true",
+     "Spring Boot.SVCApplication.executor": "Run",
+-    "git-widget-placeholder": "main",
++    "git-widget-placeholder": "Merging main",
+     "ignore.virus.scanning.warn.message": "true",
+     "junie.onboarding.icon.badge.shown": "true",
+     "kotlin-language-version-configured": "true",
+@@ -116,7 +115,6 @@
+       <workItem from="1749329341599" duration="754000" />
+       <workItem from="1749330101535" duration="4554000" />
+       <workItem from="1749491545338" duration="30000" />
+-      <workItem from="1749491582001" duration="11035000" />
+     </task>
+     <servers />
+   </component>
+Index: src/main/resources/templates/browse.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html xmlns:th=\"http://www.thymeleaf.org\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <title>Lista dokumentów</title>\r\n    <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css\" rel=\"stylesheet\" />\r\n    <style>\r\n        body {\r\n            display: flex;\r\n            margin: 0;\r\n            height: 100vh;\r\n            font-family: Arial, sans-serif;\r\n        }\r\n\r\n        .sidebar {\r\n            width: 250px;\r\n            background-color: #343a40;\r\n            color: white;\r\n            display: flex;\r\n            flex-direction: column;\r\n            padding: 20px;\r\n        }\r\n\r\n        .sidebar a {\r\n            color: white;\r\n            text-decoration: none;\r\n            margin: 10px 0;\r\n            padding: 10px;\r\n            background-color: #495057;\r\n            border-radius: 5px;\r\n            text-align: center;\r\n        }\r\n\r\n        .sidebar a:hover {\r\n            background-color: #6c757d;\r\n        }\r\n\r\n        .content {\r\n            flex-grow: 1;\r\n            padding: 30px;\r\n            background-color: #f8f9fa;\r\n        }\r\n\r\n        table {\r\n            width: 100%;\r\n            border-collapse: collapse;\r\n            margin-top: 20px;\r\n        }\r\n\r\n        th, td {\r\n            padding: 10px;\r\n            border: 1px solid #ccc;\r\n            text-align: left;\r\n        }\r\n\r\n        th {\r\n            background-color: #f0f0f0;\r\n        }\r\n    </style>\r\n</head>\r\n<body>\r\n\r\n<div class=\"sidebar\">\r\n    <a th:href=\"@{/dashboard}\">Dashboard</a>\r\n    <a th:href=\"@{/upload}\">Upload</a>\r\n    <a th:href=\"@{/browse}\">Browse</a>\r\n    <a th:href=\"@{/compare}\">Compare</a>\r\n    <a th:href=\"@{/stats}\">Stats</a>\r\n</div>\r\n\r\n<div class=\"content\">\r\n    <h1>Wszystkie dokumenty</h1>\r\n\r\n    <table border=\"1\">\r\n        <thead>\r\n        <tr>\r\n            <th>ID</th>\r\n            <th>Tytuł</th>\r\n            <th>Nazwa pliku</th>\r\n            <th>Data utworzenia</th>\r\n            <th>Aktualna wersja</th>\r\n        </tr>\r\n        </thead>\r\n        <tbody>\r\n        <tr th:each=\"document : ${documents}\">\r\n            <td th:text=\"${document.id}\"></td>\r\n            <td th:text=\"${document.title}\"></td>\r\n            <td th:text=\"${document.fileName}\"></td>\r\n            <td th:text=\"${#temporals.format(document.createdAt, 'yyyy-MM-dd HH:mm')}\"></td>\r\n            <td th:text=\"${document.currentVersion.version}\"></td>\r\n        </tr>\r\n        </tbody>\r\n    </table>\r\n</div>\r\n\r\n</body>\r\n</html>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/templates/browse.html b/src/main/resources/templates/browse.html
+--- a/src/main/resources/templates/browse.html	(revision 2941f9be4aefc6ffee3567847a23c694e3fe5337)
++++ b/src/main/resources/templates/browse.html	(date 1749503448294)
+@@ -55,6 +55,19 @@
+ 
+         th {
+             background-color: #f0f0f0;
++            cursor: pointer;
++        }
++
++        th a {
++            color: inherit;
++            text-decoration: none;
++            display: flex;
++            align-items: center;
++            gap: 5px;
++        }
++
++        th a:hover {
++            text-decoration: underline;
+         }
+     </style>
+ </head>
+@@ -74,11 +87,36 @@
+     <table border="1">
+         <thead>
+         <tr>
+-            <th>ID</th>
+-            <th>Tytuł</th>
+-            <th>Nazwa pliku</th>
+-            <th>Data utworzenia</th>
+-            <th>Aktualna wersja</th>
++            <th>
++                <a th:href="@{/browse(sortBy='id', direction=${sortBy == 'id' and direction == 'asc' ? 'desc' : 'asc'})}">
++                    ID
++                    <span th:text="${sortBy == 'id' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
++                </a>
++            </th>
++            <th>
++                <a th:href="@{/browse(sortBy='title', direction=${sortBy == 'title' and direction == 'asc' ? 'desc' : 'asc'})}">
++                    Tytuł
++                    <span th:text="${sortBy == 'title' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
++                </a>
++            </th>
++            <th>
++                <a th:href="@{/browse(sortBy='fileName', direction=${sortBy == 'fileName' and direction == 'asc' ? 'desc' : 'asc'})}">
++                    Nazwa pliku
++                    <span th:text="${sortBy == 'fileName' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
++                </a>
++            </th>
++            <th>
++                <a th:href="@{/browse(sortBy='createdAt', direction=${sortBy == 'createdAt' and direction == 'asc' ? 'desc' : 'asc'})}">
++                    Data utworzenia
++                    <span th:text="${sortBy == 'createdAt' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
++                </a>
++            </th>
++            <th>
++                <a th:href="@{/browse(sortBy='currentVersion.version', direction=${sortBy == 'currentVersion.version' and direction == 'asc' ? 'desc' : 'asc'})}">
++                    Aktualna wersja
++                    <span th:text="${sortBy == 'currentVersion.version' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
++                </a>
++            </th>
+         </tr>
+         </thead>
+         <tbody>
+@@ -87,7 +125,7 @@
+             <td th:text="${document.title}"></td>
+             <td th:text="${document.fileName}"></td>
+             <td th:text="${#temporals.format(document.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+-            <td th:text="${document.currentVersion.version}"></td>
++            <td th:text="${document.currentVersion != null ? document.currentVersion.version : '-'}"></td>
+         </tr>
+         </tbody>
+     </table>
+Index: src/main/java/com/example/SVC/service/DocumentService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.SVC.service;\r\n\r\nimport com.example.SVC.model.Document;\r\nimport com.example.SVC.model.DocumentVersion;\r\nimport com.example.SVC.model.UserClass;\r\nimport com.example.SVC.repository.DocumentRepository;\r\nimport com.example.SVC.repository.UserRepository;\r\nimport com.example.SVC.repository.VersionRepository;\r\nimport org.springframework.stereotype.Service;\r\nimport org.springframework.transaction.annotation.Transactional;\r\nimport org.springframework.web.multipart.MultipartFile;\r\nimport java.io.IOException;\r\nimport java.math.BigDecimal;\r\nimport java.nio.charset.StandardCharsets;\r\nimport java.time.LocalDate;\r\nimport java.time.LocalDateTime;\r\nimport java.util.ArrayList;\r\nimport java.util.HashMap;\r\nimport java.util.List;\r\nimport java.util.Map;\r\n\r\n\r\n@Service\r\npublic class DocumentService {\r\n\r\n    private final DocumentRepository documentRepository;\r\n    private final VersionRepository versionRepository;\r\n    private final UserRepository appUserRepository;\r\n\r\n    public DocumentService(DocumentRepository documentRepository, VersionRepository versionRepository, UserRepository appUserRepository) {\r\n        this.documentRepository = documentRepository;\r\n        this.versionRepository = versionRepository;\r\n        this.appUserRepository = appUserRepository;\r\n    }\r\n\r\n    public void handleFileUpload(MultipartFile file, String title, Long userId) throws IOException {\r\n        if (!file.getOriginalFilename().endsWith(\".txt\")) {\r\n            throw new IllegalArgumentException(\"Only .txt files are supported.\");\r\n        }\r\n\r\n        String content = new String(file.getBytes(), StandardCharsets.UTF_8);\r\n        String fileName = file.getOriginalFilename();\r\n\r\n        UserClass appUser = appUserRepository.findById(userId)\r\n                .orElseThrow(() -> new IllegalArgumentException(\"User not found\"));\r\n\r\n        Document document = documentRepository.findByTitle(title)\r\n                .orElse(null);\r\n\r\n        BigDecimal newVersionNumber;\r\n\r\n        if (document == null) {\r\n            document = new Document();\r\n            document.setTitle(title);\r\n            document.setFileName(fileName);\r\n            document.setCreatedBy(appUser);\r\n            document.setVersions(new ArrayList<>());\r\n            newVersionNumber = new BigDecimal(0);\r\n            document.setCreatedAt(LocalDateTime.now());\r\n            documentRepository.save(document);\r\n        } else {\r\n            BigDecimal latestVersion = documentRepository.findNewestVersion(title);\r\n            newVersionNumber = latestVersion.add(new BigDecimal(\"0.1\"));\r\n        }\r\n\r\n        DocumentVersion version = new DocumentVersion();\r\n        version.setContent(content);\r\n        version.setVersion(newVersionNumber);\r\n        version.setDocument(document);\r\n\r\n        versionRepository.save(version);\r\n\r\n        document.setCurrentVersion(version);\r\n        document.getVersions().add(version);\r\n\r\n        documentRepository.save(document);\r\n    }\r\n\r\n\r\n    public void deleteDocument(Long documentId) {\r\n        Document document = documentRepository.findById(documentId)\r\n                .orElseThrow(() -> new IllegalArgumentException(\"Document not found\"));\r\n\r\n        versionRepository.deleteAll(document.getVersions());\r\n        documentRepository.delete(document);\r\n    }\r\n\r\n    public List<Document> getAllDocuments() {\r\n        return documentRepository.findAll();\r\n    }\r\n\r\n    @Transactional\r\n    public List<Document> getDocumentsBy(String name){ return documentRepository.findAllByCreatedByUsername(name);}\r\n\r\n    public void rollbackDocument(Long documentId, BigDecimal versionNumber) {\r\n        Document document = documentRepository.findById(documentId)\r\n                .orElseThrow(() -> new IllegalArgumentException(\"Document not found\"));\r\n\r\n        DocumentVersion versionToRollback = versionRepository.findByVersionAndDocument(versionNumber, document)\r\n                .orElseThrow(() -> new IllegalArgumentException(\"Version not found\"));\r\n\r\n\r\n        DocumentVersion rollbackedVersion = new DocumentVersion();\r\n        rollbackedVersion.setContent(versionToRollback.getContent());\r\n        BigDecimal newVersionNumber = versionRepository.findNewestVersion(documentId).add(new BigDecimal(\"0.1\"));\r\n        rollbackedVersion.setVersion(newVersionNumber);\r\n        rollbackedVersion.setDocument(document);\r\n        versionRepository.save(rollbackedVersion);\r\n\r\n\r\n\r\n        document.setCurrentVersion(rollbackedVersion);\r\n        document.getVersions().add(rollbackedVersion);\r\n        documentRepository.save(document);\r\n\r\n\r\n\r\n    }\r\n\r\n    public byte[] downoladDocument(Long documentId) {\r\n        Document document = documentRepository.findById(documentId)\r\n                .orElseThrow(() -> new IllegalArgumentException(\"Document not found\"));\r\n\r\n        DocumentVersion currentVersion = document.getCurrentVersion();\r\n        String content = currentVersion.getContent();\r\n\r\n        return content.getBytes(StandardCharsets.UTF_8);\r\n    }\r\n\r\n    public String getDocumentTitle(Long documentId) {\r\n        Document document = documentRepository.findById(documentId)\r\n                .orElseThrow(() -> new IllegalArgumentException(\"Document not found\"));\r\n        return document.getTitle();\r\n    }\r\n\r\n    @Transactional(readOnly = true)\r\n    public Map<String, Object> getStatistics(String username) {\r\n\r\n        long documentCount = documentRepository.countDocumentsByCreatedBy(username);\r\n\r\n        Long totalCharsLong = documentRepository.sumContentLengthsByCreatedBy(username);\r\n\r\n        Double averageCharsDouble = documentRepository.avgContentLengthsByCreatedBy(username);\r\n        double averageChars = (averageCharsDouble != null) ? averageCharsDouble : 0.0;\r\n\r\n        long versionCount = documentRepository.countVersionsByCreatedBy(username);\r\n\r\n        LocalDate oldest = documentRepository.findOldestDate(username);\r\n        LocalDate newest = documentRepository.findNewestDate(username);\r\n\r\n        Map<String, Object> stats = new HashMap<>();\r\n        stats.put(\"documentCount\", documentCount);\r\n        stats.put(\"averageCharacters\", String.format(\"%.2f\", averageChars));\r\n        stats.put(\"versionCount\", versionCount);\r\n        stats.put(\"oldestDate\", oldest != null ? oldest.toString() : \"N/A\");\r\n        stats.put(\"newestDate\", newest != null ? newest.toString() : \"N/A\");\r\n\r\n        return stats;\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/SVC/service/DocumentService.java b/src/main/java/com/example/SVC/service/DocumentService.java
+--- a/src/main/java/com/example/SVC/service/DocumentService.java	(revision 2941f9be4aefc6ffee3567847a23c694e3fe5337)
++++ b/src/main/java/com/example/SVC/service/DocumentService.java	(date 1749503448293)
+@@ -6,6 +6,7 @@
+ import com.example.SVC.repository.DocumentRepository;
+ import com.example.SVC.repository.UserRepository;
+ import com.example.SVC.repository.VersionRepository;
++import org.springframework.data.domain.Sort;
+ import org.springframework.stereotype.Service;
+ import org.springframework.transaction.annotation.Transactional;
+ import org.springframework.web.multipart.MultipartFile;
+@@ -89,8 +90,24 @@
+         return documentRepository.findAll();
+     }
+ 
+-    @Transactional
+-    public List<Document> getDocumentsBy(String name){ return documentRepository.findAllByCreatedByUsername(name);}
++    @Transactional(readOnly = true)
++    public List<Document> getDocumentsBy(String userName, String sortBy, String direction) {
++        if (sortBy == null || sortBy.isBlank()) {
++            sortBy = "id";
++        }
++        if (direction == null || direction.isBlank()) {
++            direction = "asc";
++        }
++
++        Sort sort = direction.equalsIgnoreCase("desc")
++                ? Sort.by(sortBy).descending()
++                : Sort.by(sortBy).ascending();
++
++        return documentRepository.findByCreatedBy_Name(userName, sort);
++    }
++
++
++
+ 
+     public void rollbackDocument(Long documentId, BigDecimal versionNumber) {
+         Document document = documentRepository.findById(documentId)
+Index: src/main/java/com/example/SVC/controller/DocumentViewController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.SVC.controller;\r\n\r\nimport com.example.SVC.model.Document;\r\nimport com.example.SVC.model.UserClass;\r\nimport com.example.SVC.service.DocumentService;\r\nimport jakarta.transaction.Transactional;\r\nimport org.springframework.stereotype.Controller;\r\nimport org.springframework.ui.Model;\r\nimport org.springframework.web.bind.annotation.GetMapping;\r\n\r\nimport java.util.List;\r\n\r\n@Controller\r\npublic class DocumentViewController {\r\n\r\n    private final DocumentService documentService;\r\n\r\n    public DocumentViewController(DocumentService documentService) {\r\n        this.documentService = documentService;\r\n    }\r\n\r\n    @GetMapping(\"/files\")\r\n    public String getUsersDocuments(Model model, UserClass user) {\r\n        List<Document> documents = documentService.getDocumentsBy(user.getName());\r\n        model.addAttribute(\"documents\", documents);\r\n        return \"browse\";\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/SVC/controller/DocumentViewController.java b/src/main/java/com/example/SVC/controller/DocumentViewController.java
+--- a/src/main/java/com/example/SVC/controller/DocumentViewController.java	(revision 2941f9be4aefc6ffee3567847a23c694e3fe5337)
++++ b/src/main/java/com/example/SVC/controller/DocumentViewController.java	(date 1749503448291)
+@@ -4,10 +4,13 @@
+ import com.example.SVC.model.UserClass;
+ import com.example.SVC.service.DocumentService;
+ import jakarta.transaction.Transactional;
++import org.springframework.security.core.annotation.AuthenticationPrincipal;
+ import org.springframework.stereotype.Controller;
+ import org.springframework.ui.Model;
+ import org.springframework.web.bind.annotation.GetMapping;
++import org.springframework.web.bind.annotation.RequestParam;
+ 
++import java.security.Principal;
+ import java.util.List;
+ 
+ @Controller
+@@ -20,9 +23,19 @@
+     }
+ 
+     @GetMapping("/files")
+-    public String getUsersDocuments(Model model, UserClass user) {
+-        List<Document> documents = documentService.getDocumentsBy(user.getName());
+-        model.addAttribute("documents", documents);
++    public String getSortedDocuments(@RequestParam(defaultValue = "id") String sortBy,
++                                     @RequestParam(defaultValue = "asc") String direction,
++                                     Model model,
++                                     Principal principal) {
++        if (principal != null) {
++            String username = principal.getName();
++            List<Document> documents = documentService.getDocumentsBy(username, sortBy, direction);
++            model.addAttribute("documents", documents);
++            model.addAttribute("sortBy", sortBy);
++            model.addAttribute("direction", direction);
++        }
+         return "browse";
+     }
++
++
+ }
+Index: target/classes/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>spring.application.name=templatasvc\r\n\r\nspring.servlet.multipart.max-file-size=5MB\r\nspring.servlet.multipart.max-request-size=5MB\r\n\r\nspring.datasource.url=jdbc:postgresql://dpg-d0uag7c9c44c73ak08i0-a.frankfurt-postgres.render.com/users_v8jr\r\n  #dpg-d11htlogjchc7381rp80-a.frankfurt-postgres.render.com/versioncontrol_z2pc\r\nspring.datasource.username=users_v8jr_user\r\n  #versioncontrol_z2pc_user\r\nspring.datasource.password=x4RlLH5uXM2IQTda7HyNy2cWiAMVigJI\r\n  #jrpxUhI2h2xnQC5CI7RvTXLqlWU900Xt\r\nspring.datasource.driver-class-name=org.postgresql.Driver\r\n\r\n\r\nspring.jpa.hibernate.ddl-auto=update\r\nspring.jpa.show-sql=true\r\nspring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect\r\nspring.jpa.open-in-view=true\r\nspring.mvc.static-path-pattern=/static/**\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/target/classes/application.properties b/target/classes/application.properties
+--- a/target/classes/application.properties	(revision 2941f9be4aefc6ffee3567847a23c694e3fe5337)
++++ b/target/classes/application.properties	(date 1749503448296)
+@@ -3,12 +3,9 @@
+ spring.servlet.multipart.max-file-size=5MB
+ spring.servlet.multipart.max-request-size=5MB
+ 
+-spring.datasource.url=jdbc:postgresql://dpg-d0uag7c9c44c73ak08i0-a.frankfurt-postgres.render.com/users_v8jr
+-  #dpg-d11htlogjchc7381rp80-a.frankfurt-postgres.render.com/versioncontrol_z2pc
+-spring.datasource.username=users_v8jr_user
+-  #versioncontrol_z2pc_user
+-spring.datasource.password=x4RlLH5uXM2IQTda7HyNy2cWiAMVigJI
+-  #jrpxUhI2h2xnQC5CI7RvTXLqlWU900Xt
++spring.datasource.url=jdbc:postgresql://dpg-d11htlogjchc7381rp80-a.frankfurt-postgres.render.com/versioncontrol_z2pc
++spring.datasource.username=versioncontrol_z2pc_user
++spring.datasource.password=jrpxUhI2h2xnQC5CI7RvTXLqlWU900Xt
+ spring.datasource.driver-class-name=org.postgresql.Driver
+ 
+ 
