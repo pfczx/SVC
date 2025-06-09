@@ -83,12 +83,26 @@
 
 <div class="content">
     <h1>Wszystkie dokumenty</h1>
-    <form method="get" th:action="@{/browse}" class="mb-3 d-flex gap-2">
+    <form method="get" th:action="@{/browse}" class="mb-3 row g-3 align-items-center">
         <input type="hidden" name="sortBy" th:value="${sortBy}" />
         <input type="hidden" name="direction" th:value="${direction}" />
-        <input type="text" name="filter" th:value="${filter}" placeholder="Filtruj po tytule" class="form-control w-25" />
-        <button type="submit" class="btn btn-primary">Filtruj</button>
+
+        <div class="col-auto">
+            <label for="filter" class="form-label">Tytuł zawiera:</label>
+            <input type="text" id="filter" name="filter" class="form-control" th:value="${filter}" />
+        </div>
+
+        <div class="col-auto">
+            <label for="createdAfter" class="form-label">Dodane po:</label>
+            <input type="date" id="createdAfter" name="createdAfter" class="form-control"
+                   th:value="${createdAfter != null ? createdAfter : ''}" />
+        </div>
+
+        <div class="col-auto align-self-end">
+            <button type="submit" class="btn btn-primary">Filtruj</button>
+        </div>
     </form>
+
 
 
     <table border="1">

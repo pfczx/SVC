@@ -90,16 +90,18 @@ public class DocumentService {
         return documentRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
-    public List<Document> getDocumentsBy(String userName, String sortBy, String direction, String filter) {
+    @Transactional
+    public List<Document> getDocumentsBy(String userName, String sortBy, String direction, String filter, LocalDate createdAfter) {
         Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
 
-        if (filter != null && !filter.trim().isEmpty()) {
-            return documentRepository.findByCreatedBy_NameAndTitleContainingIgnoreCase(userName, filter, sort);
-        } else {
-            return documentRepository.findByCreatedBy_Name(userName, sort);
-        }
+        List<Document> docs = documentRepository.findByCreatedBy_Name(userName, sort);
+
+        return docs.stream()
+                .filter(doc -> filter == null || doc.getTitle().toLowerCase().contains(filter.toLowerCase()))
+                .filter(doc -> createdAfter == null || doc.getCreatedAt().toLocalDate().isAfter(createdAfter))
+                .toList();
     }
+
 
 
 
