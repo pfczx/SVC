@@ -4,31 +4,85 @@
     <meta charset="UTF-8">
     <title>Upload File</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            width: 250px; /* szerszy pasek */
+            background-color: #343a40;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #495057;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .sidebar a:hover {
+            background-color: #6c757d;
+        }
+
+        .content {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8f9fa;
+        }
+
+        .upload-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+    </style>
 </head>
-<body class="bg-light d-flex justify-content-center align-items-center min-vh-100">
-<div class="container bg-white p-5 rounded shadow">
-    <h2 class="mb-4 text-center text-dark fw-bold">Upload File</h2>
-    <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
-        <div class="mb-3">
-            <label for="file" class="form-label">Choose file:</label>
-            <input type="file" class="form-control" id="file" name="file" required>
-        </div>
+<body>
 
-        <div class="mb-3">
-            <label for="title" class="form-label">Document Title:</label>
-            <input type="text" class="form-control" id="title" name="title" required placeholder="Enter document title">
-        </div>
+<div class="sidebar">
+    <a th:href="@{/dashboard}">Dashboard</a>
+    <a th:href="@{/upload}">Upload</a>
+    <a th:href="@{/browse}">Browse</a>
+    <a th:href="@{/compare}">Compare</a>
+    <a th:href="@{/stats}">Stats</a>
+</div>
 
-        <div class="mb-3">
-            <label for="userId" class="form-label">User ID:</label>
-            <input type="number" class="form-control" id="userId" name="userId" required placeholder="Enter user ID">
-        </div>
+<div class="content">
+    <div class="upload-box">
+        <h2 class="mb-4 text-center text-dark fw-bold">Upload File</h2>
+        <form th:action="@{/api/documents/upload}" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="file" class="form-label">Choose file:</label>
+                <input type="file" class="form-control" id="file" name="file" required>
+            </div>
 
-        <button type="submit" class="btn btn-primary w-100 mt-3 fw-bold">Upload Document</button>
+            <div class="mb-3">
+                <label for="title" class="form-label">Document Title:</label>
+                <input type="text" class="form-control" id="title" name="title" required placeholder="Enter document title">
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3 fw-bold">Upload Document</button>
+        </form>
+
         <div th:if="${param.success}" class="alert alert-success mt-4" role="alert">Upload successful!</div>
         <div th:if="${param.error}" class="alert alert-danger mt-4" role="alert">Upload failed: <span th:text="${param.error}"></span></div>
-    </form>
-
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>

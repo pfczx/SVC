@@ -140,9 +140,8 @@ public class DocumentService {
 
         Long totalCharsLong = documentRepository.sumContentLengthsByCreatedBy(username);
 
-        int totalChars = (totalCharsLong != null) ? totalCharsLong.intValue() : 0;
-
-        double averageChars = documentCount > 0 ? (double) totalChars / documentCount : 0;
+        Double averageCharsDouble = documentRepository.avgContentLengthsByCreatedBy(username);
+        double averageChars = (averageCharsDouble != null) ? averageCharsDouble : 0.0;
 
         long versionCount = documentRepository.countVersionsByCreatedBy(username);
 

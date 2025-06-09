@@ -9,7 +9,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-dark-subtle">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">MyApp</a>
+        <a class="navbar-brand" href="/">Spring Version Control</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -34,11 +34,11 @@
 </nav>
 <div class="container mt-5">
     <h1>Welcome, <span th:text="${username}">User</span>!</h1>
-    <div class="d-grid gap-2 col-6 mx-auto mt-4">
-        <a href="/upload" class="btn btn-primary">Upload File</a>
-        <a href="/compare" class="btn btn-secondary">Compare Files</a>
-        <a href="/files" class="btn btn-secondary">Browse Files</a>
-        <a href="/stats" class="btn btn-info">View Stats</a>
+    <div class="d-grid gap-3 col-6 mx-auto mt-4">
+        <a href="/upload" class="btn btn-primary btn-lg fw-bold">Upload File</a>
+        <a href="/compare" class="btn btn-secondary btn-lg fw-bold">Compare Files</a>
+        <a href="/browse" class="btn btn-secondary btn-lg fw-bold">Browse Files</a>
+        <a href="/stats" class="btn btn-info btn-lg fw-bold">View Stats</a>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
