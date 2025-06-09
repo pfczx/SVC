@@ -69,9 +69,12 @@ public class AuthController {
     }
 
     @GetMapping("/browse")
-    public String browsePage(Model model) {
-        List<Document> documents = documentService.getAllDocuments();
-        model.addAttribute("documents", documents);
+    public String browsePage(Model model, Principal principal) {
+        if (principal != null) {
+            String username = principal.getName();
+            List<Document> documents = documentService.getDocumentsBy(username);
+            model.addAttribute("documents", documents);
+        }
         return "browse";
     }
 

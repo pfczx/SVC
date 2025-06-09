@@ -77,7 +77,6 @@
             <th>ID</th>
             <th>Tytuł</th>
             <th>Nazwa pliku</th>
-            <th>Utworzony przez</th>
             <th>Data utworzenia</th>
             <th>Aktualna wersja</th>
         </tr>
@@ -87,7 +86,6 @@
             <td th:text="${document.id}"></td>
             <td th:text="${document.title}"></td>
             <td th:text="${document.fileName}"></td>
-            <td th:text="${document.createdBy.name}"></td>
             <td th:text="${#temporals.format(document.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
             <td th:text="${document.currentVersion.version}"></td>
         </tr>

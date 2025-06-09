@@ -89,6 +89,9 @@ public class DocumentService {
         return documentRepository.findAll();
     }
 
+    @Transactional
+    public List<Document> getDocumentsBy(String name){ return documentRepository.findAllByCreatedByUsername(name);}
+
     public void rollbackDocument(Long documentId, BigDecimal versionNumber) {
         Document document = documentRepository.findById(documentId)
                 .orElseThrow(() -> new IllegalArgumentException("Document not found"));

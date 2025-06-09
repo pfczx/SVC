@@ -45,14 +45,6 @@ public class DocumentController {
         }
     }
 
-//    @GetMapping("/files")
-//    public String getAllDocuments(Model model) {
-//        List<Document> documents = documentService.getAllDocuments();
-//        System.out.println("Documents fetched: " + documents.size());
-//        model.addAttribute("documents", documents);
-//        return "files";
-//    }
-
     @GetMapping("/download/{id}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Long documentId) {
         try {

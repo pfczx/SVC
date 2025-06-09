@@ -20,8 +20,6 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     @Query("SELECT MAX(dv.version) FROM DocumentVersion dv WHERE dv.document.title = :title")
     BigDecimal findNewestVersion(@Param("title") String title);
 
-    List<Document> findByCreatedBy_Name(String username);
-
     @Query("SELECT COUNT(d) FROM Document d WHERE d.createdBy.name = :username")
     long countDocumentsByCreatedBy(@Param("username") String username);
 
@@ -39,6 +37,10 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
 
     @Query("SELECT MAX(d.createdAt) FROM Document d WHERE d.createdBy.name= :username")
     LocalDate findNewestDate(String username);
+
+    @Query("SELECT d FROM Document d WHERE d.createdBy.name = :username")
+    List<Document> findAllByCreatedByUsername(@Param("username") String username);
+
 
 
 
