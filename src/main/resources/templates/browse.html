@@ -83,6 +83,7 @@
 
 <div class="content">
     <h1>Wszystkie dokumenty</h1>
+
     <form method="get" th:action="@{/browse}" class="mb-3 row g-3 align-items-center">
         <input type="hidden" name="sortBy" th:value="${sortBy}" />
         <input type="hidden" name="direction" th:value="${direction}" />
@@ -103,41 +104,15 @@
         </div>
     </form>
 
-
-
     <table border="1">
         <thead>
         <tr>
-            <th>
-                <a th:href="@{/browse(sortBy='id', direction=${sortBy == 'id' and direction == 'asc' ? 'desc' : 'asc'})}">
-                    ID
-                    <span th:text="${sortBy == 'id' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
-                </a>
-            </th>
-            <th>
-                <a th:href="@{/browse(sortBy='title', direction=${sortBy == 'title' and direction == 'asc' ? 'desc' : 'asc'})}">
-                    Tytuł
-                    <span th:text="${sortBy == 'title' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
-                </a>
-            </th>
-            <th>
-                <a th:href="@{/browse(sortBy='fileName', direction=${sortBy == 'fileName' and direction == 'asc' ? 'desc' : 'asc'})}">
-                    Nazwa pliku
-                    <span th:text="${sortBy == 'fileName' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
-                </a>
-            </th>
-            <th>
-                <a th:href="@{/browse(sortBy='createdAt', direction=${sortBy == 'createdAt' and direction == 'asc' ? 'desc' : 'asc'})}">
-                    Data utworzenia
-                    <span th:text="${sortBy == 'createdAt' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
-                </a>
-            </th>
-            <th>
-                <a th:href="@{/browse(sortBy='currentVersion.version', direction=${sortBy == 'currentVersion.version' and direction == 'asc' ? 'desc' : 'asc'})}">
-                    Aktualna wersja
-                    <span th:text="${sortBy == 'currentVersion.version' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
-                </a>
-            </th>
+            <th><a th:href="@{/browse(sortBy='id', direction=${sortBy == 'id' and direction == 'asc' ? 'desc' : 'asc'})}">ID <span th:text="${sortBy == 'id' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span></a></th>
+            <th><a th:href="@{/browse(sortBy='title', direction=${sortBy == 'title' and direction == 'asc' ? 'desc' : 'asc'})}">Tytuł <span th:text="${sortBy == 'title' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span></a></th>
+            <th><a th:href="@{/browse(sortBy='fileName', direction=${sortBy == 'fileName' and direction == 'asc' ? 'desc' : 'asc'})}">Nazwa pliku <span th:text="${sortBy == 'fileName' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span></a></th>
+            <th><a th:href="@{/browse(sortBy='createdAt', direction=${sortBy == 'createdAt' and direction == 'asc' ? 'desc' : 'asc'})}">Data utworzenia <span th:text="${sortBy == 'createdAt' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span></a></th>
+            <th><a th:href="@{/browse(sortBy='currentVersion.version', direction=${sortBy == 'currentVersion.version' and direction == 'asc' ? 'desc' : 'asc'})}">Aktualna wersja <span th:text="${sortBy == 'currentVersion.version' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span></a></th>
+            <th>Akcje</th>
         </tr>
         </thead>
         <tbody>
@@ -147,10 +122,75 @@
             <td th:text="${document.fileName}"></td>
             <td th:text="${#temporals.format(document.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
             <td th:text="${document.currentVersion != null ? document.currentVersion.version : '-'}"></td>
+            <td>
+                <button type="button"
+                        class="btn btn-sm btn-outline-danger"
+                        th:onclick="'showRollbackModal(' + ${document.id} + ')'">
+                    Rollback
+                </button>
+                <a th:href="@{'/api/documents/download/' + ${document.id}}"
+                   class="btn btn-sm btn-outline-primary ms-2"
+                   download
+                >
+                    Download
+                </a>
+            </td>
         </tr>
         </tbody>
     </table>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="rollbackModal" tabindex="-1" aria-labelledby="rollbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="rollbackForm" method="post" action="">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="rollbackModalLabel">Cofnij dokument</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zamknij"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="versionSelect">Wybierz wersję:</label>
+                    <select id="versionSelect" name="version" class="form-select" required>
+                        <!-- Dynamiczne opcje -->
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Rollback</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function showRollbackModal(documentId) {
+        fetch(`/api/documents/${documentId}/versions`)
+            .then(response => response.json())
+            .then(data => {
+                const select = document.getElementById('versionSelect');
+                select.innerHTML = '';
+                data.forEach(v => {
+                    const option = document.createElement('option');
+                    option.value = v.version;
+                    option.text = `Wersja ${v.version}`;
+                    select.appendChild(option);
+                });
+
+                const form = document.getElementById('rollbackForm');
+                form.action = `/api/documents/${documentId}/rollback`;
+
+                const modal = new bootstrap.Modal(document.getElementById('rollbackModal'));
+                modal.show();
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Błąd podczas pobierania wersji dokumentu.');
+            });
+    }
+</script>
 
 </body>
 </html>

@@ -48,7 +48,7 @@ public class DocumentController {
     @GetMapping("/download/{id}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Long documentId) {
         try {
-            byte[] content = documentService.downoladDocument(documentId);
+            byte[] content = documentService.downloadDocument(documentId);
             String title = documentService.getDocumentTitle(documentId);
 
             String fileName = title + ".txt";
@@ -64,17 +64,15 @@ public class DocumentController {
     }
 
     @PostMapping("/{id}/rollback")
-    public ResponseEntity<String> rollbackDocument(
-            @PathVariable("id") Long documentId,
-            @RequestParam("version") BigDecimal versionNumber) {
-
+    public ResponseEntity<String> rollbackDocument(@PathVariable("id") Long documentId) {
         try {
-            documentService.rollbackDocument(documentId, versionNumber);
+            documentService.rollbackDocument(documentId);
             return ResponseEntity.ok("Rollback successful.");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(999).body("something went wrong "+e.getMessage());
+            return ResponseEntity.status(400).body("something went wrong " + e.getMessage());
         }
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteDocument(@PathVariable("id") Long documentId) {

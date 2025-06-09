@@ -15,10 +15,7 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -103,36 +100,41 @@ public class DocumentService {
     }
 
 
-
-
-
-
-    public void rollbackDocument(Long documentId, BigDecimal versionNumber) {
+    public void rollbackDocument(Long documentId) {
         Document document = documentRepository.findById(documentId)
                 .orElseThrow(() -> new IllegalArgumentException("Document not found"));
 
-        DocumentVersion versionToRollback = versionRepository.findByVersionAndDocument(versionNumber, document)
-                .orElseThrow(() -> new IllegalArgumentException("Version not found"));
+        DocumentVersion currentVersion = document.getCurrentVersion();
+        if (currentVersion == null) {
+            throw new IllegalArgumentException("Current version not found");
+        }
 
+        BigDecimal currentVersionNumber = currentVersion.getVersion();
+
+        List<DocumentVersion> versions = versionRepository.findByDocument(document);
+
+        DocumentVersion previousVersion = versions.stream()
+                .filter(v -> v.getVersion().compareTo(currentVersionNumber) < 0)
+                .max(Comparator.comparing(DocumentVersion::getVersion))
+                .orElseThrow(() -> new IllegalArgumentException("No previous version available for rollback"));
 
         DocumentVersion rollbackedVersion = new DocumentVersion();
-        rollbackedVersion.setContent(versionToRollback.getContent());
+        rollbackedVersion.setContent(previousVersion.getContent());
+
         BigDecimal newVersionNumber = versionRepository.findNewestVersion(documentId).add(new BigDecimal("0.1"));
         rollbackedVersion.setVersion(newVersionNumber);
         rollbackedVersion.setDocument(document);
+
         versionRepository.save(rollbackedVersion);
-
-
 
         document.setCurrentVersion(rollbackedVersion);
         document.getVersions().add(rollbackedVersion);
         documentRepository.save(document);
-
-
-
     }
 
-    public byte[] downoladDocument(Long documentId) {
+
+
+    public byte[] downloadDocument(Long documentId) {
         Document document = documentRepository.findById(documentId)
                 .orElseThrow(() -> new IllegalArgumentException("Document not found"));
 
