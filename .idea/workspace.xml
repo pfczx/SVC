@@ -6,11 +6,21 @@
   <component name="ChangeListManager">
     <list default="true" id="1010f658-525d-4cfd-a62b-d312068a8ce6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/AuthController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/security/UserDetailsImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/security/UserDetailsImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/repository/DocumentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/repository/DocumentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/compare.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/compare.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/files.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/browse.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/stats.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/stats.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/templates/upload.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/upload.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/compare.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/compare.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/files.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/files.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/stats.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/stats.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/templates/upload.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/upload.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

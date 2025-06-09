@@ -1,9 +1,9 @@
 package com.example.SVC.controller;
 
+import com.example.SVC.model.Document;
 import com.example.SVC.model.UserClass;
 import com.example.SVC.repository.UserRepository;
 import com.example.SVC.service.DocumentService;
-import com.example.SVC.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -67,9 +68,11 @@ public class AuthController {
         return "compare";
     }
 
-    @GetMapping("/files")
-    public String browsePage() {
-        return "files";
+    @GetMapping("/browse")
+    public String browsePage(Model model) {
+        List<Document> documents = documentService.getAllDocuments();
+        model.addAttribute("documents", documents);
+        return "browse";
     }
 
     @GetMapping("/stats")

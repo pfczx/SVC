@@ -63,27 +63,33 @@
 <div class="sidebar">
     <a th:href="@{/dashboard}">Dashboard</a>
     <a th:href="@{/upload}">Upload</a>
-    <a th:href="@{/files}">Files</a>
+    <a th:href="@{/browse}">Browse</a>
     <a th:href="@{/compare}">Compare</a>
     <a th:href="@{/stats}">Stats</a>
 </div>
 
 <div class="content">
-    <h1>Lista dokumentów</h1>
+    <h1>Wszystkie dokumenty</h1>
 
-    <table>
+    <table border="1">
         <thead>
         <tr>
             <th>ID</th>
             <th>Tytuł</th>
-            <th>Data przesłania</th>
+            <th>Nazwa pliku</th>
+            <th>Utworzony przez</th>
+            <th>Data utworzenia</th>
+            <th>Aktualna wersja</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="doc : ${documents}">
-            <td th:text="${doc.id}">1</td>
-            <td th:text="${doc.title}">Przykładowy dokument</td>
-            <td th:text="${#temporals.format(doc.uploadDate, 'yyyy-MM-dd HH:mm')}">2025-06-01 12:00</td>
+        <tr th:each="document : ${documents}">
+            <td th:text="${document.id}"></td>
+            <td th:text="${document.title}"></td>
+            <td th:text="${document.fileName}"></td>
+            <td th:text="${document.createdBy.name}"></td>
+            <td th:text="${#temporals.format(document.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${document.currentVersion.version}"></td>
         </tr>
         </tbody>
     </table>

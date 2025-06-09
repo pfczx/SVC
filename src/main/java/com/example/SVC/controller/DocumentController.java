@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,14 +45,13 @@ public class DocumentController {
         }
     }
 
-    @GetMapping("/files")
-    public String getAllDocuments(Model model) {
-        List<Document> documents = documentService.getAllDocuments();
-        System.out.println("Liczba dokumentów: " + documents.size());
-        documents.forEach(doc -> System.out.println("Dokument: " + doc.getId() + " - " + doc.getTitle()));
-        model.addAttribute("documents", documents);
-        return "documents-list";
-    }
+//    @GetMapping("/files")
+//    public String getAllDocuments(Model model) {
+//        List<Document> documents = documentService.getAllDocuments();
+//        System.out.println("Documents fetched: " + documents.size());
+//        model.addAttribute("documents", documents);
+//        return "files";
+//    }
 
     @GetMapping("/download/{id}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Long documentId) {
@@ -94,3 +94,5 @@ public class DocumentController {
         }
     }
 }
+
+
