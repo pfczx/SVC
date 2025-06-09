@@ -22,6 +22,14 @@ public class UserDetailsImpl implements UserDetails {
         return user.getPassword();
     }
 
+    public UserClass getUser() {
+        return user;
+    }
+
+    public Long getId() {
+        return user.getId();
+    }
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }

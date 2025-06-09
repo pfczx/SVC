@@ -1,6 +1,8 @@
 package com.example.SVC.controller;
 
 import com.example.SVC.model.Document;
+import com.example.SVC.model.UserClass;
+import com.example.SVC.security.UserDetailsImpl;
 import com.example.SVC.service.DocumentService;
 
 
@@ -9,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +31,10 @@ public class DocumentController {
     public ResponseEntity<String> uploadFile(
             @RequestParam("file") MultipartFile file,
             @RequestParam("title") String title,
-            @RequestParam("userId") Long userId) {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+
+                Long userId = userDetails.getUser().getId();
 
         try {
             documentService.handleFileUpload(file, title, userId);
