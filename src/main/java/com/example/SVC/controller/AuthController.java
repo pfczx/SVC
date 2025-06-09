@@ -63,11 +63,6 @@ public class AuthController {
         return "upload";
     }
 
-    @GetMapping("/compare")
-    public String comparePage() {
-        return "compare";
-    }
-
     @GetMapping("/browse")
     public String browsePage(Model model, Principal principal) {
         if (principal != null) {
@@ -87,4 +82,5 @@ public class AuthController {
         }
         return "stats";
     }
+
 }

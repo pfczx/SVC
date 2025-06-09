@@ -15,7 +15,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface DocumentRepository extends JpaRepository<Document, Long> {
     Optional<Document> findByTitle(String title);
-
+    @Query("SELECT d.title FROM Document d")
+    List<String> findAllTitles();
 
     @Query("SELECT MAX(dv.version) FROM DocumentVersion dv WHERE dv.document.title = :title")
     BigDecimal findNewestVersion(@Param("title") String title);

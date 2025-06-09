@@ -19,6 +19,5 @@ public interface VersionRepository extends JpaRepository<DocumentVersion, Long> 
     Optional<DocumentVersion> findById(Long id);
     @Query("SELECT MAX(d.version) FROM DocumentVersion d WHERE d.document.id = :documentId")
     BigDecimal findNewestVersion(@Param("documentId") Long documentId);
-   
-
+    List<DocumentVersion> findByDocument(Document doc);
 }
