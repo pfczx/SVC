@@ -41,7 +41,10 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     @Query("SELECT d FROM Document d WHERE d.createdBy.name = :username")
     List<Document> findAllByCreatedByUsername(@Param("username") String username);
 
-    List<Document> findByCreatedBy_Name(String name, Sort sort);
+    List<Document> findByCreatedBy_Name(String userName, Sort sort);
+
+    List<Document> findByCreatedBy_NameAndTitleContainingIgnoreCase(String userName, String titleFragment, Sort sort);
+
 
 
 

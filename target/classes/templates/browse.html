@@ -83,6 +83,13 @@
 
 <div class="content">
     <h1>Wszystkie dokumenty</h1>
+    <form method="get" th:action="@{/browse}" class="mb-3 d-flex gap-2">
+        <input type="hidden" name="sortBy" th:value="${sortBy}" />
+        <input type="hidden" name="direction" th:value="${direction}" />
+        <input type="text" name="filter" th:value="${filter}" placeholder="Filtruj po tytule" class="form-control w-25" />
+        <button type="submit" class="btn btn-primary">Filtruj</button>
+    </form>
+
 
     <table border="1">
         <thead>

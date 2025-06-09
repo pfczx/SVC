@@ -73,18 +73,21 @@ public class AuthController {
     public String browsePage(
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String direction,
+            @RequestParam(required = false) String filter, // filtr tekstowy
             Model model,
             Principal principal) {
 
         if (principal != null) {
             String username = principal.getName();
-            List<Document> documents = documentService.getDocumentsBy(username, sortBy, direction);
+            List<Document> documents = documentService.getDocumentsBy(username, sortBy, direction, filter);
             model.addAttribute("documents", documents);
             model.addAttribute("sortBy", sortBy);
             model.addAttribute("direction", direction);
+            model.addAttribute("filter", filter);
         }
         return "browse";
     }
+
 
 
 

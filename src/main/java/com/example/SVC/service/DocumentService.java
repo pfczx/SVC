@@ -91,20 +91,16 @@ public class DocumentService {
     }
 
     @Transactional(readOnly = true)
-    public List<Document> getDocumentsBy(String userName, String sortBy, String direction) {
-        if (sortBy == null || sortBy.isBlank()) {
-            sortBy = "id";
-        }
-        if (direction == null || direction.isBlank()) {
-            direction = "asc";
-        }
+    public List<Document> getDocumentsBy(String userName, String sortBy, String direction, String filter) {
+        Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
 
-        Sort sort = direction.equalsIgnoreCase("desc")
-                ? Sort.by(sortBy).descending()
-                : Sort.by(sortBy).ascending();
-
-        return documentRepository.findByCreatedBy_Name(userName, sort);
+        if (filter != null && !filter.trim().isEmpty()) {
+            return documentRepository.findByCreatedBy_NameAndTitleContainingIgnoreCase(userName, filter, sort);
+        } else {
+            return documentRepository.findByCreatedBy_Name(userName, sort);
+        }
     }
+
 
 
 
