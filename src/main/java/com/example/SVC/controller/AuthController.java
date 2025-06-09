@@ -4,6 +4,7 @@ import com.example.SVC.model.Document;
 import com.example.SVC.model.UserClass;
 import com.example.SVC.repository.UserRepository;
 import com.example.SVC.service.DocumentService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -73,18 +75,25 @@ public class AuthController {
     public String browsePage(
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String direction,
+            @RequestParam(required = false) String filter,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdAfter,
             Model model,
             Principal principal) {
 
         if (principal != null) {
             String username = principal.getName();
-            List<Document> documents = documentService.getDocumentsBy(username, sortBy, direction);
+            List<Document> documents = documentService.getDocumentsBy(username, sortBy, direction, filter, createdAfter);
             model.addAttribute("documents", documents);
             model.addAttribute("sortBy", sortBy);
             model.addAttribute("direction", direction);
+            model.addAttribute("filter", filter);
+            model.addAttribute("createdAfter", createdAfter);
         }
+
         return "browse";
     }
+
+
 
 
 

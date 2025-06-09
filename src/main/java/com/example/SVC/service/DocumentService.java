@@ -90,21 +90,19 @@ public class DocumentService {
         return documentRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
-    public List<Document> getDocumentsBy(String userName, String sortBy, String direction) {
-        if (sortBy == null || sortBy.isBlank()) {
-            sortBy = "id";
-        }
-        if (direction == null || direction.isBlank()) {
-            direction = "asc";
-        }
+    @Transactional
+    public List<Document> getDocumentsBy(String userName, String sortBy, String direction, String filter, LocalDate createdAfter) {
+        Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
 
-        Sort sort = direction.equalsIgnoreCase("desc")
-                ? Sort.by(sortBy).descending()
-                : Sort.by(sortBy).ascending();
+        List<Document> docs = documentRepository.findByCreatedBy_Name(userName, sort);
 
-        return documentRepository.findByCreatedBy_Name(userName, sort);
+        return docs.stream()
+                .filter(doc -> filter == null || doc.getTitle().toLowerCase().contains(filter.toLowerCase()))
+                .filter(doc -> createdAfter == null || doc.getCreatedAt().toLocalDate().isAfter(createdAfter))
+                .toList();
     }
+
+
 
 
 
