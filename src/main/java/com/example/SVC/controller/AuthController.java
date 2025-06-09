@@ -66,11 +66,6 @@ public class AuthController {
         return "upload";
     }
 
-    @GetMapping("/compare")
-    public String comparePage() {
-        return "compare";
-    }
-
     @GetMapping("/browse")
     public String browsePage(
             @RequestParam(defaultValue = "id") String sortBy,
@@ -106,4 +101,5 @@ public class AuthController {
         }
         return "stats";
     }
+
 }

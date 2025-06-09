@@ -13,8 +13,10 @@ import com.github.difflib.patch.DeltaType;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.util.HtmlUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -33,45 +35,62 @@ public class VersionService {
         DocumentVersion version2 = versionRepository.findById(version2Id)
                 .orElseThrow(() -> new IllegalArgumentException("Second version not found"));
 
-        String content1 = version1.getContent();
-        String content2 = version2.getContent();
-
-        List<String> lines1 = List.of(content1.split("\n"));
-        List<String> lines2 = List.of(content2.split("\n"));
+        List<String> lines1 = List.of(version1.getContent().split("\n"));
+        List<String> lines2 = List.of(version2.getContent().split("\n"));
 
         Patch<String> patch = DiffUtils.diff(lines1, lines2);
+        List<AbstractDelta<String>> deltas = patch.getDeltas();
 
-        StringBuilder diffResult = new StringBuilder();
+        StringBuilder result = new StringBuilder();
+        int oldIndex = 0;
+        int newIndex = 0;
+        int deltaIndex = 0;
 
-        for (AbstractDelta<String> delta : patch.getDeltas()) {
-            DeltaType type = delta.getType();
-            int origPos = delta.getSource().getPosition() + 1;
-            int revPos = delta.getTarget().getPosition() + 1;
+        while (newIndex < lines2.size() || oldIndex < lines1.size()) {
+            if (deltaIndex < deltas.size() && oldIndex == deltas.get(deltaIndex).getSource().getPosition()) {
+                AbstractDelta<String> delta = deltas.get(deltaIndex);
+                List<String> removed = delta.getSource().getLines();
+                List<String> added = delta.getTarget().getLines();
 
-            List<String> originalLines = delta.getSource().getLines();
-            List<String> revisedLines = delta.getTarget().getLines();
-
-            if (type == DeltaType.DELETE) {
-                for (int i = 0; i < originalLines.size(); i++) {
-                    diffResult.append(String.format("%3d - %s\n", origPos + i, originalLines.get(i)));
+                for (String line : removed) {
+                    result.append(toHtml(oldIndex + 1, "-", line, "diff-removed"));
+                    oldIndex++;
                 }
-            } else if (type == DeltaType.INSERT) {
-                for (int i = 0; i < revisedLines.size(); i++) {
-                    diffResult.append(String.format("%3d + %s\n", revPos + i, revisedLines.get(i)));
+
+                for (String line : added) {
+                    result.append(toHtml(newIndex + 1, "+", line, "diff-added"));
+                    newIndex++;
                 }
-            } else if (type == DeltaType.CHANGE) {
-                for (int i = 0; i < originalLines.size(); i++) {
-                    diffResult.append(String.format("%3d - %s\n", origPos + i, originalLines.get(i)));
+
+                deltaIndex++;
+            } else if (newIndex < lines2.size() && oldIndex < lines1.size()
+                    && lines1.get(oldIndex).equals(lines2.get(newIndex))) {
+                result.append(toHtml(newIndex + 1, " ", lines2.get(newIndex), "diff-line"));
+                oldIndex++;
+                newIndex++;
+            } else {
+                if (oldIndex < lines1.size()) {
+                    result.append(toHtml(oldIndex + 1, "-", lines1.get(oldIndex), "diff-removed"));
+                    oldIndex++;
                 }
-                for (int i = 0; i < revisedLines.size(); i++) {
-                    diffResult.append(String.format("%3d + %s\n", revPos + i, revisedLines.get(i)));
+                if (newIndex < lines2.size()) {
+                    result.append(toHtml(newIndex + 1, "+", lines2.get(newIndex), "diff-added"));
+                    newIndex++;
                 }
             }
-
-            diffResult.append("\n");
         }
 
-        return diffResult.toString();
+        return result.toString();
+    }
+
+    private String toHtml(int lineNumber, String symbol, String line, String cssClass) {
+        return String.format(
+                "<div class=\"%s\"><code>%4d %s %s</code></div>",
+                cssClass,
+                lineNumber,
+                symbol,
+                StringEscapeUtils.escapeHtml4(line)
+        );
     }
 
 

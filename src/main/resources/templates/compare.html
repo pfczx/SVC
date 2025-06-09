@@ -51,6 +51,33 @@
         .form-section {
             margin-bottom: 20px;
         }
+
+        .diff-line {
+            display: block;
+            padding: 2px;
+            color: #000;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        .diff-added {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+            padding: 2px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        .diff-removed {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
+            padding: 2px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
     </style>
 </head>
 <body>
@@ -68,23 +95,40 @@
         <div class="card-body">
             <h2 class="card-title text-center mb-4">Porównaj dwie wersje dokumentu</h2>
 
-            <form th:action="@{/versions/diff}" method="get" class="form-section">
-                <div class="mb-3">
-                    <label for="version1Id" class="form-label">ID wersji 1:</label>
-                    <input type="number" id="version1Id" name="version1Id" class="form-control" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="version2Id" class="form-label">ID wersji 2:</label>
-                    <input type="number" id="version2Id" name="version2Id" class="form-control" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100 fw-bold">Porównaj</button>
+            <form th:action="@{/compare/select-versions}" method="post" class="form-section">
+                <label for="title" class="form-label">Wybierz tytuł dokumentu:</label>
+                <select id="title" name="title" class="form-select" required>
+                    <option th:each="t : ${titles}" th:value="${t}" th:text="${t}"></option>
+                </select>
+                <button type="submit" class="btn btn-primary mt-2">Wybierz dokument</button>
             </form>
 
-            <div th:if="${diff != null}" class="mt-4">
-                <h4>Różnice między wersjami:</h4>
-                <textarea readonly class="form-control mt-2" style="height: 300px;" th:utext="${diff}"></textarea>
+            <div th:if="${versions != null}">
+                <form th:action="@{/compare/diff}" method="post" class="form-section">
+                    <input type="hidden" name="documentId" th:value="${documentId}"/>
+
+                    <div class="mb-3">
+                        <label>Wersja 1:</label>
+                        <select name="version1Id" class="form-select" required>
+                            <option th:each="v : ${versions}" th:value="${v.id}" th:text="${v.version}"></option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Wersja 2:</label>
+                        <select name="version2Id" class="form-select" required>
+                            <option th:each="v : ${versions}" th:value="${v.id}" th:text="${v.version}"></option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 fw-bold">Porównaj wybrane wersje</button>
+                </form>
+            </div>
+            <div th:if="${diffContent != null}" class="mt-4">
+                <h4 class="diff-title" th:text="${diffTitle}"></h4>
+                <div class="border p-3 mt-2" style="background-color: #f0f0f0; max-height: 500px; overflow-y: auto;">
+                    <<div th:utext="${diffContent}"></div>
+                </div>
             </div>
         </div>
     </div>
