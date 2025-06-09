@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
@@ -37,9 +38,12 @@ public class DocumentController {
     }
 
     @GetMapping("/files")
-    public ResponseEntity<List<Document>> getAllDocuments() {
+    public String getAllDocuments(Model model) {
         List<Document> documents = documentService.getAllDocuments();
-        return ResponseEntity.ok(documents);
+        System.out.println("Liczba dokumentów: " + documents.size());
+        documents.forEach(doc -> System.out.println("Dokument: " + doc.getId() + " - " + doc.getTitle()));
+        model.addAttribute("documents", documents);
+        return "documents-list";
     }
 
     @GetMapping("/download/{id}")

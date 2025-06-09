@@ -43,7 +43,6 @@ public class VersionService {
 
         StringBuilder diffResult = new StringBuilder();
 
-
         for (AbstractDelta<String> delta : patch.getDeltas()) {
             DeltaType type = delta.getType();
             int origPos = delta.getSource().getPosition() + 1;
@@ -68,11 +67,14 @@ public class VersionService {
                     diffResult.append(String.format("%3d + %s\n", revPos + i, revisedLines.get(i)));
                 }
             }
-        }
 
+            diffResult.append("\n");
+        }
 
         return diffResult.toString();
     }
+
+
 
     public String displayContent(Long documentId, BigDecimal versionnum) {
         Document document = documentRepository.findById(documentId)

@@ -1,3 +1,5 @@
+C:\java\SVC\src\main\java\com\example\SVC\config\SecurityConfig.java
+C:\java\SVC\src\main\java\com\example\SVC\controller\AuthController.java
 C:\java\SVC\src\main\java\com\example\SVC\controller\DocumentController.java
 C:\java\SVC\src\main\java\com\example\SVC\controller\UserController.java
 C:\java\SVC\src\main\java\com\example\SVC\controller\VersionController.java
@@ -7,6 +9,7 @@ C:\java\SVC\src\main\java\com\example\SVC\model\UserClass.java
 C:\java\SVC\src\main\java\com\example\SVC\repository\DocumentRepository.java
 C:\java\SVC\src\main\java\com\example\SVC\repository\UserRepository.java
 C:\java\SVC\src\main\java\com\example\SVC\repository\VersionRepository.java
+C:\java\SVC\src\main\java\com\example\SVC\security\UserDetailsImpl.java
 C:\java\SVC\src\main\java\com\example\SVC\service\DocumentService.java
 C:\java\SVC\src\main\java\com\example\SVC\service\UserService.java
 C:\java\SVC\src\main\java\com\example\SVC\service\VersionService.java

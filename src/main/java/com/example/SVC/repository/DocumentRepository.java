@@ -39,4 +39,7 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     @Query("SELECT MAX(d.createdAt) FROM Document d WHERE d.createdBy.name= :username")
     LocalDate findNewestDate(String username);
 
+
+
+
 }

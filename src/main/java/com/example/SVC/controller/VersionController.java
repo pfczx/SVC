@@ -43,5 +43,5 @@ public class VersionController {
         String currentVersion = versionService.getCurrentVersion(documentId);
         return ResponseEntity.ok(currentVersion);
     }
-    
+
 }
