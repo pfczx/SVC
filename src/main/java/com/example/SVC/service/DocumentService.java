@@ -6,6 +6,7 @@ import com.example.SVC.model.UserClass;
 import com.example.SVC.repository.DocumentRepository;
 import com.example.SVC.repository.UserRepository;
 import com.example.SVC.repository.VersionRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -89,8 +90,24 @@ public class DocumentService {
         return documentRepository.findAll();
     }
 
-    @Transactional
-    public List<Document> getDocumentsBy(String name){ return documentRepository.findAllByCreatedByUsername(name);}
+    @Transactional(readOnly = true)
+    public List<Document> getDocumentsBy(String userName, String sortBy, String direction) {
+        if (sortBy == null || sortBy.isBlank()) {
+            sortBy = "id";
+        }
+        if (direction == null || direction.isBlank()) {
+            direction = "asc";
+        }
+
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        return documentRepository.findByCreatedBy_Name(userName, sort);
+    }
+
+
+
 
     public void rollbackDocument(Long documentId, BigDecimal versionNumber) {
         Document document = documentRepository.findById(documentId)

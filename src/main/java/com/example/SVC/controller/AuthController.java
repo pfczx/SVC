@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.List;
@@ -69,14 +70,23 @@ public class AuthController {
     }
 
     @GetMapping("/browse")
-    public String browsePage(Model model, Principal principal) {
+    public String browsePage(
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction,
+            Model model,
+            Principal principal) {
+
         if (principal != null) {
             String username = principal.getName();
-            List<Document> documents = documentService.getDocumentsBy(username);
+            List<Document> documents = documentService.getDocumentsBy(username, sortBy, direction);
             model.addAttribute("documents", documents);
+            model.addAttribute("sortBy", sortBy);
+            model.addAttribute("direction", direction);
         }
         return "browse";
     }
+
+
 
     @GetMapping("/stats")
     public String statsPage(Model model, Principal principal) {

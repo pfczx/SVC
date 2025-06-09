@@ -11,7 +11,7 @@ import com.example.SVC.model.UserClass;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
+import org.springframework.data.domain.Sort;
 
 public interface DocumentRepository extends JpaRepository<Document, Long> {
     Optional<Document> findByTitle(String title);
@@ -41,7 +41,7 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     @Query("SELECT d FROM Document d WHERE d.createdBy.name = :username")
     List<Document> findAllByCreatedByUsername(@Param("username") String username);
 
-
+    List<Document> findByCreatedBy_Name(String name, Sort sort);
 
 
 

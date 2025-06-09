@@ -55,6 +55,19 @@
 
         th {
             background-color: #f0f0f0;
+            cursor: pointer;
+        }
+
+        th a {
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        th a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -74,11 +87,36 @@
     <table border="1">
         <thead>
         <tr>
-            <th>ID</th>
-            <th>Tytuł</th>
-            <th>Nazwa pliku</th>
-            <th>Data utworzenia</th>
-            <th>Aktualna wersja</th>
+            <th>
+                <a th:href="@{/browse(sortBy='id', direction=${sortBy == 'id' and direction == 'asc' ? 'desc' : 'asc'})}">
+                    ID
+                    <span th:text="${sortBy == 'id' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/browse(sortBy='title', direction=${sortBy == 'title' and direction == 'asc' ? 'desc' : 'asc'})}">
+                    Tytuł
+                    <span th:text="${sortBy == 'title' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/browse(sortBy='fileName', direction=${sortBy == 'fileName' and direction == 'asc' ? 'desc' : 'asc'})}">
+                    Nazwa pliku
+                    <span th:text="${sortBy == 'fileName' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/browse(sortBy='createdAt', direction=${sortBy == 'createdAt' and direction == 'asc' ? 'desc' : 'asc'})}">
+                    Data utworzenia
+                    <span th:text="${sortBy == 'createdAt' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/browse(sortBy='currentVersion.version', direction=${sortBy == 'currentVersion.version' and direction == 'asc' ? 'desc' : 'asc'})}">
+                    Aktualna wersja
+                    <span th:text="${sortBy == 'currentVersion.version' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span>
+                </a>
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -87,7 +125,7 @@
             <td th:text="${document.title}"></td>
             <td th:text="${document.fileName}"></td>
             <td th:text="${#temporals.format(document.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
-            <td th:text="${document.currentVersion.version}"></td>
+            <td th:text="${document.currentVersion != null ? document.currentVersion.version : '-'}"></td>
         </tr>
         </tbody>
     </table>
