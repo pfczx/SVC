@@ -128,6 +128,13 @@
                         th:onclick="'showRollbackModal(' + ${document.id} + ');'">
                     Rollback
                 </button>
+
+                <button type="button"
+                        class="btn btn-sm btn-outline-secondary ms-1"
+                        th:onclick="'deleteDocument(' + ${document.id} + ');'">
+                    Delete
+                </button>
+
                 <a th:href="@{'/api/documents/download/' + ${document.id}}"
                    class="btn btn-sm btn-outline-primary ms-2"
                    download
@@ -140,7 +147,7 @@
     </table>
 </div>
 
-<!-- JavaScript for Rollback -->
+<!-- JavaScript for Rollback and Delete -->
 <script>
     function showRollbackModal(documentId) {
         if (confirm("Czy na pewno chcesz wykonać rollback dokumentu?")) {
@@ -160,6 +167,25 @@
                 })
                 .catch(error => {
                     alert("Błąd podczas rollbacku: " + error.message);
+                });
+        }
+    }
+
+    function deleteDocument(documentId) {
+        if (confirm("Czy na pewno chcesz usunąć dokument?")) {
+            fetch('/api/documents/' + documentId, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Dokument usunięty.");
+                        window.location.reload();
+                    } else {
+                        return response.text().then(text => { throw new Error(text); });
+                    }
+                })
+                .catch(error => {
+                    alert("Błąd podczas usuwania dokumentu: " + error.message);
                 });
         }
     }
