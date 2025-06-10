@@ -118,17 +118,7 @@ public class DocumentService {
                 .max(Comparator.comparing(DocumentVersion::getVersion))
                 .orElseThrow(() -> new IllegalArgumentException("No previous version available for rollback"));
 
-        DocumentVersion rollbackedVersion = new DocumentVersion();
-        rollbackedVersion.setContent(previousVersion.getContent());
-
-        BigDecimal newVersionNumber = versionRepository.findNewestVersion(documentId).add(new BigDecimal("0.1"));
-        rollbackedVersion.setVersion(newVersionNumber);
-        rollbackedVersion.setDocument(document);
-
-        versionRepository.save(rollbackedVersion);
-
-        document.setCurrentVersion(rollbackedVersion);
-        document.getVersions().add(rollbackedVersion);
+        document.setCurrentVersion(previousVersion);
         documentRepository.save(document);
     }
 
