@@ -27,24 +27,6 @@ public class DocumentController {
 
     private final DocumentService documentService;
 
-    @Transactional
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadFile(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("title") String title,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
-
-                Long userId = userDetails.getUser().getId();
-
-        try {
-            documentService.handleFileUpload(file, title, userId);
-            return ResponseEntity.ok("File uploaded successfully.");
-        } catch (Exception e) {
-            return ResponseEntity.status(999).body("Something went wrong "+e.getMessage());
-        }
-    }
-
     @GetMapping("/download/{id}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Long documentId) {
         try {

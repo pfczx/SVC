@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1010f658-525d-4cfd-a62b-d312068a8ce6" name="Changes" comment="" />
+    <list default="true" id="1010f658-525d-4cfd-a62b-d312068a8ce6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentDiffController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentDiffController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/upload.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/upload.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/upload.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/upload.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -114,7 +122,7 @@
       <workItem from="1749329341599" duration="754000" />
       <workItem from="1749330101535" duration="4554000" />
       <workItem from="1749491545338" duration="30000" />
-      <workItem from="1749571354342" duration="1288000" />
+      <workItem from="1749571354342" duration="2891000" />
     </task>
     <servers />
   </component>

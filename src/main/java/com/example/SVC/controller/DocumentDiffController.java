@@ -68,5 +68,9 @@ public class DocumentDiffController {
         model.addAttribute("diffContent", diffHtml);
 
         return "compare";
+
+
     }
+
+
 }
