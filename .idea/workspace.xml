@@ -5,13 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1010f658-525d-4cfd-a62b-d312068a8ce6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/SVC.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SVC.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SVC/templates/compare.html" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SVC/templates/compare.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentDiffController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/controller/DocumentDiffController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/upload.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/upload.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/upload.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/upload.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SVC/repository/DocumentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SVC/repository/DocumentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/browse.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/browse.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/stats.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/stats.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tekstydotestow/file.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tekstydotestow/file.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,14 +90,6 @@
       </method>
     </configuration>
   </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
-      </set>
-    </attachedChunks>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -123,6 +119,7 @@
       <workItem from="1749330101535" duration="4554000" />
       <workItem from="1749491545338" duration="30000" />
       <workItem from="1749571354342" duration="2891000" />
+      <workItem from="1749581493284" duration="3077000" />
     </task>
     <servers />
   </component>

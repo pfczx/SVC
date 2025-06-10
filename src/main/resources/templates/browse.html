@@ -73,12 +73,16 @@
 </head>
 <body>
 
-<div class="sidebar">
+<div class="sidebar d-flex flex-column">
     <a th:href="@{/dashboard}">Dashboard</a>
     <a th:href="@{/upload}">Upload</a>
     <a th:href="@{/browse}">Browse</a>
     <a th:href="@{/compare}">Compare</a>
     <a th:href="@{/stats}">Stats</a>
+
+    <form th:action="@{/logout}" method="post" style="margin-top: auto;">
+        <button type="submit" class="btn btn-danger w-100">Logout</button>
+    </form>
 </div>
 
 <div class="content">
@@ -147,7 +151,6 @@
     </table>
 </div>
 
-<!-- JavaScript for Rollback and Delete -->
 <script>
     function showRollbackModal(documentId) {
         if (confirm("Czy na pewno chcesz wykonać rollback dokumentu?")) {

@@ -5,6 +5,7 @@ import com.example.SVC.model.DocumentVersion;
 import com.example.SVC.repository.DocumentRepository;
 import com.example.SVC.repository.VersionRepository;
 import com.example.SVC.service.VersionService;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -31,14 +32,17 @@ public class DocumentDiffController {
     }
 
     @GetMapping("/compare")
-    public String showDocumentTitleForm(Model model) {
-        model.addAttribute("titles", documentRepo.findAllTitles()); // t
+    public String showDocumentTitleForm(Model model, Authentication authentication) {
+        String username = authentication.getName();
+        List<String> titles = documentRepo.findTitlesByUsername(username);
+        model.addAttribute("titles", titles);
         return "compare";
     }
     @Transactional
     @PostMapping("/compare/select-versions")
-    public String selectVersions(@RequestParam String title, Model model) {
-        Optional<Document> doc = documentRepo.findByTitle(title);
+    public String selectVersions(@RequestParam String title, Model model, Authentication authentication) {
+        String username = authentication.getName();
+        Optional<Document> doc = documentRepo.findByTitleAndUsername(title, username);
         if (doc.isEmpty()) {
             model.addAttribute("errorMessage", "Nie znaleziono dokumentu o tytule: " + title);
             return "compare";
@@ -71,6 +75,4 @@ public class DocumentDiffController {
 
 
     }
-
-
 }

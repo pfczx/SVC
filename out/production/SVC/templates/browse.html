@@ -55,6 +55,19 @@
 
         th {
             background-color: #f0f0f0;
+            cursor: pointer;
+        }
+
+        th a {
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        th a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -71,14 +84,35 @@
 <div class="content">
     <h1>Wszystkie dokumenty</h1>
 
+    <form method="get" th:action="@{/browse}" class="mb-3 row g-3 align-items-center">
+        <input type="hidden" name="sortBy" th:value="${sortBy}" />
+        <input type="hidden" name="direction" th:value="${direction}" />
+
+        <div class="col-auto">
+            <label for="filter" class="form-label">Tytuł zawiera:</label>
+            <input type="text" id="filter" name="filter" class="form-control" th:value="${filter}" />
+        </div>
+
+        <div class="col-auto">
+            <label for="createdAfter" class="form-label">Dodane po:</label>
+            <input type="date" id="createdAfter" name="createdAfter" class="form-control"
+                   th:value="${createdAfter != null ? createdAfter : ''}" />
+        </div>
+
+        <div class="col-auto align-self-end">
+            <button type="submit" class="btn btn-primary">Filtruj</button>
+        </div>
+    </form>
+
     <table border="1">
         <thead>
         <tr>
-            <th>ID</th>
-            <th>Tytuł</th>
-            <th>Nazwa pliku</th>
-            <th>Data utworzenia</th>
-            <th>Aktualna wersja</th>
+            <th><a th:href="@{/browse(sortBy='id', direction=${sortBy == 'id' and direction == 'asc' ? 'desc' : 'asc'})}">ID <span th:text="${sortBy == 'id' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span></a></th>
+            <th><a th:href="@{/browse(sortBy='title', direction=${sortBy == 'title' and direction == 'asc' ? 'desc' : 'asc'})}">Tytuł <span th:text="${sortBy == 'title' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span></a></th>
+            <th><a th:href="@{/browse(sortBy='fileName', direction=${sortBy == 'fileName' and direction == 'asc' ? 'desc' : 'asc'})}">Nazwa pliku <span th:text="${sortBy == 'fileName' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span></a></th>
+            <th><a th:href="@{/browse(sortBy='createdAt', direction=${sortBy == 'createdAt' and direction == 'asc' ? 'desc' : 'asc'})}">Data utworzenia <span th:text="${sortBy == 'createdAt' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span></a></th>
+            <th><a th:href="@{/browse(sortBy='currentVersion.version', direction=${sortBy == 'currentVersion.version' and direction == 'asc' ? 'desc' : 'asc'})}">Aktualna wersja <span th:text="${sortBy == 'currentVersion.version' ? (direction == 'asc' ? '▲' : '▼') : ''}"></span></a></th>
+            <th>Akcje</th>
         </tr>
         </thead>
         <tbody>
@@ -87,11 +121,74 @@
             <td th:text="${document.title}"></td>
             <td th:text="${document.fileName}"></td>
             <td th:text="${#temporals.format(document.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
-            <td th:text="${document.currentVersion.version}"></td>
+            <td th:text="${document.currentVersion != null ? document.currentVersion.version : '-'}"></td>
+            <td>
+                <button type="button"
+                        class="btn btn-sm btn-outline-danger"
+                        th:onclick="'showRollbackModal(' + ${document.id} + ');'">
+                    Rollback
+                </button>
+
+                <button type="button"
+                        class="btn btn-sm btn-outline-secondary ms-1"
+                        th:onclick="'deleteDocument(' + ${document.id} + ');'">
+                    Delete
+                </button>
+
+                <a th:href="@{'/api/documents/download/' + ${document.id}}"
+                   class="btn btn-sm btn-outline-primary ms-2"
+                   download
+                >
+                    Download
+                </a>
+            </td>
         </tr>
         </tbody>
     </table>
 </div>
+
+<script>
+    function showRollbackModal(documentId) {
+        if (confirm("Czy na pewno chcesz wykonać rollback dokumentu?")) {
+            fetch('/api/documents/' + documentId + '/rollback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Rollback zakończony sukcesem.");
+                        window.location.reload();
+                    } else {
+                        return response.text().then(text => { throw new Error(text); });
+                    }
+                })
+                .catch(error => {
+                    alert("Błąd podczas rollbacku: " + error.message);
+                });
+        }
+    }
+
+    function deleteDocument(documentId) {
+        if (confirm("Czy na pewno chcesz usunąć dokument?")) {
+            fetch('/api/documents/' + documentId, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Dokument usunięty.");
+                        window.location.reload();
+                    } else {
+                        return response.text().then(text => { throw new Error(text); });
+                    }
+                })
+                .catch(error => {
+                    alert("Błąd podczas usuwania dokumentu: " + error.message);
+                });
+        }
+    }
+</script>
 
 </body>
 </html>

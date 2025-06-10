@@ -46,6 +46,12 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
 
     List<Document> findByCreatedBy_NameAndTitleContainingIgnoreCase(String userName, String titleFragment, Sort sort);
 
+    @Query("SELECT d.title FROM Document d WHERE d.createdBy.name = :username")
+    List<String> findTitlesByUsername(@Param("username") String username);
+
+    @Query("SELECT d FROM Document d WHERE d.title = :title AND d.createdBy.name = :username")
+    Optional<Document> findByTitleAndUsername(@Param("title") String title, @Param("username") String username);
+
 
 
 
